@@ -15,6 +15,17 @@ extern uint32_t* dci_tempParameters;
 extern char* dci_output;
 extern uint32_t* dci_argsToValid;
 
+
+/*
+ *	 =====	dci_readValueFromDCI =====
+ * Function return a pointer (uint32_t*) to array with values decode from DCI.
+ * dci is our DCI read from input of programm;
+ * shiftArray is array with bit lenght of every DCI parameter;
+ * sizeOfShiftArray is number of arrays element of shiftArray;
+ */
+
+uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t shiftArray[], uint8_t sizeOfShiftArray);
+
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p);
 uint32_t* dci_readValueFromDci(uint64_t dci, uint8_t shiftArray[], uint8_t sizeOfShiftArray);
