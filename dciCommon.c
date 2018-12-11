@@ -65,34 +65,15 @@ void dci_print(char* output /*?*/)
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t ipow(uint64_t base, uint8_t n)
-{
-    uint64_t result = 1;
-    while(1)
-    {
-        if (n & 1)
-        {
-            result *= base;
-        }
-        n >>= 1;
-
-        if (!n)
-        {
-            break;
-        }
-        base *= base;
-    }
-    return result;
-}
-
 static uint64_t createMask (const uint8_t n)
 {
-	uint64_t mask = 0;
+	uint64_t mask = 1;
 	if (n == 0)
 	{
-		return mask;
+		return mask = 0;
 	}
-	mask = ipow(2,n) - 1;
+	mask <<= n;
+	mask -= 1;
 	return mask;
 }
 
