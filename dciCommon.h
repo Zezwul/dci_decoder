@@ -3,6 +3,8 @@
 
 #define AMOUNT_OF_BANDWIDTHS 6
 
+#include <stdint.h>
+
 typedef enum dciType {dci0, dci1, dci60a, maxDci} dciType;
 
 extern uint64_t dci_readArgumentsStdin;
@@ -25,7 +27,7 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[],
 
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p);
-void dci_readStdin(void);
+uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin);
 void dci_print(char* output);
 
 #endif /*DCI_COMMON_H_*/

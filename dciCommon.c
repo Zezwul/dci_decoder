@@ -1,9 +1,9 @@
+#include"dciCommon.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include <stdint.h>
 
 char* dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
@@ -38,9 +38,10 @@ void dci_ValidArguments(const int argc, const char* const argv[], dciType* restr
 	*dci_p = dciResult;
 }
 
-void dci_readStdin(void)
+uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
 {
-	scanf("%li", &dci_readArgumentsStdin);
+	uint8_t val = scanf("%li", &dci_readArgumentsStdin);
+	return val;
 }
 
 
@@ -89,11 +90,11 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[],
 	}
 
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
-	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
-	if (alignedToRight != CHAR_BIT)
-	{
-		dci >>= alignedToRight;
-	}
+//	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
+//	if (alignedToRight != CHAR_BIT)
+//	{
+//		dci >>= alignedToRight;
+//	}
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
