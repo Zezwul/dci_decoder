@@ -11,16 +11,16 @@ int main(const int argc, const char* argv[])
 	switch (dci_Result)
 	{
 	case dci0:
-		dci_readValueFromDci();
-		dci0_validateStdinParameters(&dci_tempParameters);
+//		dci_readValueFromDCI();
+//		dci0_validateStdinParameters(&dci_tempParameters);
 		break;
 	case dci1:
-		dci_readValueFromDci();
-		dci0_validateStdinParameters(&dci_tempParameters);
+//		dci_readValueFromDCI();
+//		dci0_validateStdinParameters(&dci_tempParameters);
 		break;
 	case dci60a:
-		dci_readValueFromDci();
-		dci0_validateStdinParameters(&dci_tempParameters);
+//		dci_readValueFromDCI();
+//		dci0_validateStdinParameters(&dci_tempParameters);
 		break;
 	default:
 		break;

@@ -1,9 +1,9 @@
-#include "dciCommon.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <stdint.h>
 
 char* dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
@@ -80,24 +80,24 @@ static uint64_t createMask (const uint8_t n)
 	return mask;
 }
 
-uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t shiftArray[], const uint8_t sizeOfShiftArray)
+uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray)
 {
 	uint8_t bitLenghtOfDCI = 0;
-	for (uint8_t i = 0; i < sizeOfShiftArray; i++)
+	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
-		bitLenghtOfDCI += shiftArray[i];
+		bitLenghtOfDCI += bitLenghtOfDciParameter[i];
 	}
 
-	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfShiftArray);
+	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
 	if (alignedToRight != CHAR_BIT)
 	{
 		dci >>= alignedToRight;
 	}
-	for (uint8_t i = 0; i < sizeOfShiftArray; i++)
+	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
-		outputArray[i] = dci & createMask(shiftArray[sizeOfShiftArray - i - 1]);
-		dci >>= shiftArray[sizeOfShiftArray - i - 1];
+		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
+		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1];
 	}
 	return outputArray;
 }
