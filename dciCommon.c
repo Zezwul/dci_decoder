@@ -52,7 +52,7 @@ void dci_print(char* output /*?*/)
 
 static uint64_t ipow(uint64_t base, uint8_t n)
 {
-int result = 1;
+    uint64_t result = 1;
     while(1)
     {
         if (n & 1)
