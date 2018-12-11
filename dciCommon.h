@@ -23,7 +23,7 @@ extern uint32_t* dci_argsToValid;
  * sizeOfArray is number of arrays element of shiftArray;
  */
 
-uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[], uint8_t sizeOfArray);
+uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray);
 
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p);

@@ -81,7 +81,7 @@ static uint64_t createMask (const uint8_t n)
 	return mask;
 }
 
-uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray)
+uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray)
 {
 	uint8_t bitLenghtOfDCI = 0;
 	for (uint8_t i = 0; i < sizeOfArray; i++)
@@ -98,7 +98,7 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[],
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
-		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1];
+		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
 	}
 	return outputArray;
 }
