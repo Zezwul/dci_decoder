@@ -1,7 +1,9 @@
 #include "dciCommon.h"
-
+#include <stddef.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 #include <math.h>
 #include <string.h>
 
@@ -23,7 +25,7 @@ uint8_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
  * @param[out] prb_p						Pointer return nr of PRB's
  *
  *******************************************************************************************/
-void dci_DefineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
+void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p )
 {
 	dciType dciResult = dci0;
@@ -50,3 +52,69 @@ void dci_DefineDci(const int argc, const char* const argv[], dciType* restrict c
 	*prb_p = bandwidthPRB;
 	*dci_p = dciResult;
 }
+
+uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
+{
+	uint8_t val = scanf("%li", &dci_readArgumentsStdin);
+	return val;
+}
+
+
+void dci_print(char* output /*?*/)
+{
+	fprintf(stdout, "%s", output);
+}
+
+static uint64_t ipow(uint64_t base, uint8_t n)
+{
+    uint64_t result = 1;
+    while(1)
+    {
+        if (n & 1)
+        {
+            result *= base;
+        }
+        n >>= 1;
+
+        if (!n)
+        {
+            break;
+        }
+        base *= base;
+    }
+    return result;
+}
+
+static uint64_t createMask (const uint8_t n)
+{
+	uint64_t mask = 0;
+	if (n == 0)
+	{
+		return mask;
+	}
+	mask = ipow(2,n) - 1;
+	return mask;
+}
+
+uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray)
+{
+	uint8_t bitLenghtOfDCI = 0;
+	for (uint8_t i = 0; i < sizeOfArray; i++)
+	{
+		bitLenghtOfDCI += bitLenghtOfDciParameter[i];
+	}
+
+	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
+//	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
+//	if (alignedToRight != CHAR_BIT)
+//	{
+//		dci >>= alignedToRight;
+//	}
+	for (uint8_t i = 0; i < sizeOfArray; i++)
+	{
+		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
+		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
+	}
+	return outputArray;
+}
+

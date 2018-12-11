@@ -1,0 +1,8 @@
+.cproject
+.project
+.settings/
+Debug/
+dataLib.c
+test.out
+*.orig
+*.*.orig

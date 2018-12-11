@@ -17,7 +17,7 @@ Test(TestArguments, dci_ValidPositiveArguments)
 	dciType dciResult;
 	for (size_t i = 0; i < sizeof(dci_str_expected) / sizeof(int); i++)
 	{
-		dci_DefineDci(3, args_in[i], &dciResult, &bandwidthPRB);
+		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
 		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
 		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
 	}
@@ -35,15 +35,28 @@ Test(TestArguments, dci_ValidNegativeArguments)
 	dciType dciResult;
 	for (size_t i = 0; i < 10; i++)
 	{
-		dci_DefineDci(3, args_in[i], &dciResult, &bandwidthPRB);
+		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
 		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
 		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
 	}
 
 	for (size_t i = 0; i < 10; i++)
 	{
-		dci_DefineDci(9999, args_in[i], &dciResult, &bandwidthPRB);
+		dci_defineDci(9999, args_in[i], &dciResult, &bandwidthPRB);
 		cr_expect_eq(bandwidthPRB, 100,"Error");
 		cr_expect_eq(dciResult, dci0,"Error");
 	}
+}
+
+Test(libTest,dci_readValueFromDCITest)
+{
+	uint64_t dci = 0x7FFFFFFFFFFFFFEF;
+	uint8_t sizeOfShiftArray = 4;
+	uint8_t shiftArray[] = {1, 7, 4, 4};
+	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray);
+
+	cr_assert(output[0] == 15, "dci_readValueFromDCI working fking bad");
+	cr_assert(output[1] == 13, "dci_readValueFromDCI working fking bad");
+	cr_assert(output[2] == 127, "dci_readValueFromDCI working fking bad");
+	cr_assert(output[3] == 1, "dci_readValueFromDCI working fking bad");
 }
