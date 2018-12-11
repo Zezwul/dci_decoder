@@ -9,8 +9,8 @@ Test(TestArguments, dci_ValidPositiveArguments)
 			{"0", "dci0", "15"}, {"0", "dci0", "20"}, {"0", "dci1", "1"}, {"0", "dci1", "3"}, {"0", "dci1", "5"},
 			{"0", "dci1", "10"}, {"0", "dci1", "15"}, {"0", "dci1", "20"},{"0", "dci60a", "1"}, {"0", "dci60a", "3"},
 			{"0", "dci60a", "5"}, {"0", "dci60a", "10"}, {"0", "dci60a", "15"}, {"0", "dci60a", "20"},};
-	int dci_bitLengthArray_expected[] = {6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100};
-	int dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci1, dci1, dci1,
+	uint8_t dci_bitLengthArray_expected[] = {6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100};
+	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci1, dci1, dci1,
 			dci1, dci1, dci1, dci60a, dci60a, dci60a, dci60a, dci60a, dci60a};
 
 	uint8_t bandwidthPRB;
@@ -28,8 +28,8 @@ Test(TestArguments, dci_ValidNegativeArguments)
 	const char* args_in[][3] = {{"0", "ala", "-1"}, {"0", "dci31", "0"}, {"0", "dci21", "2.1"}, {"0", "dci09", "9999999999"},
 			{"0", "dci60A", "51"}, {"0", "dci60abc", "33"}, {"0", "!@#$%^&*(", "103"}, {"0", "dci-1", "151"},
 			{"0", "dci6size0", "-100000"}, {"0", "0dci", "202"}};
-	int dci_bitLengthArray_expected[] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-	int dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0 };
+	uint8_t dci_bitLengthArray_expected[] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0 };
 
 	uint8_t bandwidthPRB;
 	dciType dciResult;

@@ -17,8 +17,8 @@ uint8_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
  * 			This same happend to argv[2] where standard bandwith size is 20 MHz and return number
  * 			of Power Resoure Block
  *
- * @param[in] argc 							Amount of elements in argv[] array
- * @param[in] argv[] 						Array with type of dci and bandwith
+ * @param[in] argc							Amount of elements in argv[] array
+ * @param[in] argv[]						Array with type of dci and bandwith
  * @param[out] dci_p						Pointer return type of dci
  * @param[out] prb_p						Pointer return nr of PRB's
  *
