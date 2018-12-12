@@ -15,7 +15,7 @@ uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRBG
 
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p);
-uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* outFirstPRB, uint8_t* outLastPRB);l
+uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* outFirstPRB, uint8_t* outLastPRB);
 uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin);
 void dci_print(char* output);
 
