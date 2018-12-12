@@ -8,17 +8,17 @@
 #include <string.h>
 
 /* dci0 Length of parameters */
-#define FIRSTPRB1 7
-#define LASTPRB1 7
+#define FIRSTPRB0 7
+#define LASTPRB0 7
 #define MCS0 5
 #define NDI0 1
 #define TPC0 2
 #define DMRS 3
-#define CSIR 1
-#define SRSR 1
+#define CSIR0 1
+#define SRSR0 1
 
 #define DCI0_NUMBER_PARAM 8
-#define DCI0_OFFSET_ARRAY {FIRSTPRB, LASTPRB, MCS0, NDI0, TPC0, DMRS, CSIR, SRSR};
+#define DCI0_OFFSET_ARRAY {FIRSTPRB0, LASTPRB0, MCS0, NDI0, TPC0, DMRS, CSIR0, SRSR0};
 
 /* dci1 Length of parameters */
 #define MCS1 5
