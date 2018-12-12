@@ -1,18 +1,19 @@
-#include"dciCommon.h"
+#include "dciCommon.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <math.h>
+#include <string.h>
 
 char* dciStrArguments[] = {"dci0", "dci1","dci60a"};
+uint8_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
+uint8_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 
-uint8_t dciBandwidth[] = {1, 3, 5, 10, 15, 20};
-
-void dci_ValidArguments(const int argc, const char* const argv[], dciType* restrict const  dci_p,
+void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 		uint8_t* restrict const prb_p )
 {
-	uint8_t dciBandwidthPRB[] = {6, 15, 25, 50, 75, 100};
 	dciType dciResult = dci0;
 	uint8_t bandwidthPRB = 100;
 	if (argc > 2 && argc < 4)
