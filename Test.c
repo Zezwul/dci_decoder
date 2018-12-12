@@ -68,12 +68,12 @@ Test(libTest,dci1_bitmapDecoderTest)
 	uint64_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
 	uint8_t bitmapBitLenght = 25;
 	uint8_t* outputBitmap;
-		for (size_t i = 0; i < 5; i++)
+	for (size_t i = 0; i < 5; i++)
+	{
+		outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
+		for (size_t j = 0; j < testArray[i][0]+1; j++)
 		{
-			outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
-			for (size_t j = 0; j < testArray[i][0]+1; j++)
-			{
-				cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
-			}
+			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
 		}
+	}
 }
