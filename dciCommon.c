@@ -143,7 +143,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 
 uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
 {
-	uint8_t val = scanf("%li", &dci_readArgumentsStdin);
+	uint8_t val = scanf("%lli", &dci_readArgumentsStdin);
 	return val;
 }
 
@@ -204,5 +204,30 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
 	}
 	return outputArray;
+}
+
+uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* outFirstPRB, uint8_t* outLastPRB)
+{
+	if ( outFirstPRB == NULL || outLastPRB == NULL)
+		{
+			printf("ERR_OCC_invalid_pointers");
+			return -1;
+		}
+
+	uint8_t PRBFirst = 0;
+	uint8_t PRBLength = 0;
+
+	PRBFirst = RIV % bandwidthPRB;
+	PRBLength = (-((RIV - bandwidthPRB - 1 - PRBFirst) / bandwidthPRB - bandwidthPRB - 1));
+
+	if ((PRBLength - 1) >=(bandwidthPRB / 2))
+		{
+			PRBFirst = bandwidthPRB - 1 - PRBFirst;
+			PRBLength = bandwidthPRB + 1 - (RIV - (bandwidthPRB - 1 - PRBFirst)) / bandwidthPRB;
+		}
+
+	*outFirstPRB = PRBFirst;
+	*outLastPRB = PRBFirst + PRBLength - 1;
+	return 0;
 }
 
