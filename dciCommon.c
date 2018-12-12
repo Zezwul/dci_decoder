@@ -193,11 +193,6 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	}
 
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
-	//	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
-	//	if (alignedToRight != CHAR_BIT)
-	//	{
-	//		dci >>= alignedToRight;
-	//	}
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
