@@ -60,9 +60,8 @@ enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPU
 void dci1_CorrectnessParameters(uint8_t* dciParam);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthPRB);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthPRB);
-
-uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRIV);
-uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth, uint8_t bitmapBitLenght);
+uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth);
+uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth);
 
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
@@ -104,6 +103,7 @@ uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght);
  * @param[out] prb_p						Pointer return nr of PRB's
  *
  *****************************************************************************************************/
+
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
 				   uint8_t* restrict const prb_p);
 

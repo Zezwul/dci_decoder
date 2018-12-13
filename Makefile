@@ -1,5 +1,5 @@
 build: Test.c
-	gcc Test.c dciCommon.c -O2 -o test.out -lm -lcriterion
+	gcc Test.c dciCommon.c -O2 -o test.out -lcriterion
 test: 
 	./test.out
 clean:

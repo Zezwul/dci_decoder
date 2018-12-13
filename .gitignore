@@ -6,3 +6,4 @@ dataLib.c
 test.out
 *.orig
 *.*.orig
+--library=m
