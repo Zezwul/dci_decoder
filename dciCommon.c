@@ -175,12 +175,13 @@ static uint64_t ipow(uint64_t base, uint8_t n)
 
 static uint64_t createMask (const uint8_t n)
 {
-	uint64_t mask = 0;
+	uint64_t mask = 1;
 	if (n == 0)
 	{
-		return mask;
+		return 0;
 	}
-	mask = ipow(2,n) - 1;
+	mask <<= n;
+	mask -= 1;
 	return mask;
 }
 
@@ -220,4 +221,25 @@ uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* restrict ou
     *outFirstPRB = PRBFirst;
     *outLastPRB = PRBFirst + PRBLength - 1;
     return 0;
+}
+
+uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
+{
+	uint8_t counter = bitmapBitLenght-1;
+	uint8_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
+	uint8_t i, j = 0;
+	while (i < bitmapBitLenght)
+	{
+		if (bitmap & 1)
+		{
+			++j;
+			outputRBGIndex = realloc(outputRBGIndex,(j+1)*sizeof(*outputRBGIndex));
+			outputRBGIndex[j] = counter;
+		}
+		bitmap >>= 1;
+		counter--;
+		i++;
+	}
+	outputRBGIndex[0] = j;
+	return outputRBGIndex;
 }
