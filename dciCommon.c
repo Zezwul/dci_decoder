@@ -187,7 +187,7 @@ uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 	uint8_t counter = bitmapBitLenght-1;
 	uint8_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
 	uint8_t i, j = 0;
-	while(i < bitmapBitLenght)
+	while (i < bitmapBitLenght)
 	{
 		if (bitmap & 1)
 		{
