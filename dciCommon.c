@@ -14,33 +14,6 @@ uint8_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 uint8_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 7, 11, 12 ,13};
 uint8_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
 
-
-
-//void dci_validationForBandwidth(uint8_t Bandwidth, const uint8_t bandwidthPRB)
-//{
-//    uint32_t lenghtRivBits[BANDWITDH_VALUES] = {5, 7, 7, 11, 12, 13};
-//    uint32_t outputElements[BANDWITDH_VALUES] = {3, 4, 4, 4, 4, 4};
-//    uint32_t amountOfPRBs[BANDWITDH_VALUES] = {6, 15, 25, 50, 75, 100};
-//
-//    uint8_t control = 0;
-//
-//    for (uint32_t i = 0; i < BANDWITDH_VALUES; i++)l
-//    {
-//        if (amountOfPRBs[i] == bandwidthPRB)
-//        {
-//            dci->outputArrayElements = outputElements[i];
-//            dci->lenghtRivBits = lenghtRivBits[i];
-//            dci60a_validancePRBs(dci, bandwidthPRB);
-//            control++;
-//            break;
-//        }
-//    }
-//    if (control == 0)
-//    {
-//        abortWithMsg("ERR_OCC_invalid_bandwidth");
-//    }
-//}
-
 uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRIV)
 {
 	for (uint8_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
