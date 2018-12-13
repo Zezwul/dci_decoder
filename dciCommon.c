@@ -45,7 +45,7 @@
 
 #define DCI60A_NUMBER_PARAM 11
 #define DCI60A_OFFSET_ARRAY {FIRSTPRB60A, LASTPRB60A, MCS60A, PUSCH, HARQ60A, NDI60A,\
-	RV60A, TPC60A, CSIR60A, SRSR60A, PDCCH};
+		RV60A, TPC60A, CSIR60A, SRSR60A, PDCCH};
 
 char* dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
@@ -143,7 +143,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 
 uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
 {
-	uint8_t val = scanf("%li", &dci_readArgumentsStdin);
+	uint8_t val = scanf(SCNu64, &dci_readArgumentsStdin);
 	return val;
 }
 
@@ -151,6 +151,26 @@ uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
 void dci_print(char* output /*?*/)
 {
 	fprintf(stdout, "%s", output);
+}
+
+static uint64_t ipow(uint64_t base, uint8_t n)
+{
+	uint64_t result = 1;
+	while(1)
+	{
+		if (n & 1)
+		{
+			result *= base;
+		}
+		n >>= 1;
+
+		if (!n)
+		{
+			break;
+		}
+		base *= base;
+	}
+	return result;
 }
 
 static uint64_t createMask (const uint8_t n)
@@ -182,6 +202,27 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	return outputArray;
 }
 
+uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* restrict outFirstPRB, uint8_t* restrict outLastPRB)
+{
+    if ( outFirstPRB == NULL || outLastPRB == NULL)
+    {
+        printf("ERR_OCC_invalid_pointers");
+        return UINT16_MAX;
+    }
+    uint8_t PRBFirst = 0;
+    uint8_t PRBLength = 0;
+    PRBFirst = RIV % bandwidthPRB;
+    PRBLength = RIV / bandwidthPRB + 1;
+    if (PRBFirst + PRBLength > bandwidthPRB)
+    {
+        PRBFirst = bandwidthPRB - 1 - PRBFirst;
+        PRBLength = bandwidthPRB + 1 - PRBLength + 1;
+    }
+    *outFirstPRB = PRBFirst;
+    *outLastPRB = PRBFirst + PRBLength - 1;
+    return 0;
+}
+
 uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 {
 	uint8_t counter = bitmapBitLenght-1;
@@ -202,4 +243,3 @@ uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 	outputRBGIndex[0] = j;
 	return outputRBGIndex;
 }
-
