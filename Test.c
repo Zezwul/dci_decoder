@@ -65,8 +65,8 @@ Test(libTest,dci_readValueFromDCITest)
 Test(libTest,dci1_bitmapDecoderTest)
 {
 	uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght);
-	uint64_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
-	uint64_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
+	uint32_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
+	uint8_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
 	uint8_t bitmapBitLenght = 25;
 	uint8_t* outputBitmap;
 	for (size_t i = 0; i < 5; i++)
