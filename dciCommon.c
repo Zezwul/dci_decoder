@@ -197,9 +197,9 @@ uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 		}
 		bitmap >>= 1;
 		counter--;
-		outputRBGIndex[0] = j;
 		i++;
 	}
+	outputRBGIndex[0] = j;
 	return outputRBGIndex;
 }
 
