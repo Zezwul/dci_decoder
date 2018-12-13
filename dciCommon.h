@@ -16,7 +16,7 @@
 #define CSIR0 1
 #define SRSR0 1
 
-#define DCI0_NUMBER_PARAM 8
+#define DCI0_NUMBER_PARAM 9
 #define DCI0_OFFSET_INPUT_ARRAY { FORMAT_FLAG, HOPPING_FLAG, RIV, MCS0, \
 								NDI0, TPC0, DMRS, CSIR0, SRSR0 };
 #define DCI0_OFFSET_ARRAY { FIRSTPRB0, LASTPRB0, MCS0, NDI0, TPC0, DMRS, CSIR0, SRSR0 };
@@ -65,7 +65,7 @@ typedef enum dciType {dci0, dci1, dci60a, maxDci} dciType;
  *
 **********************************************************************************************************/
 uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[],
-		const uint8_t sizeOfArray);
+		const uint8_t sizeOfArray, uint8_t bandwidthPRB);
 uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRBG, uint8_t rbgNumber);
 uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRIV);
 

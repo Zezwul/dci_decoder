@@ -8,9 +8,9 @@ int main(const int argc, const char* argv[])
 	uint32_t bandwidth = atoi(argv[2]);
 	uint64_t inputArguments;
 	dciType dci_Result;
-	uint8_t* dci_bandwidthPRB = NULL;
+	uint8_t dci_bandwidthPRB;
 
-	dci_defineDci(argc, argv, &dci_Result, dci_bandwidthPRB);
+	dci_defineDci(argc, argv, &dci_Result, &dci_bandwidthPRB);
 	dci_readStdin(&inputArguments);
 
 	switch (dci_Result)

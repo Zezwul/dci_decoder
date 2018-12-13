@@ -102,15 +102,10 @@ static uint64_t createMask (const uint8_t n)
 	return mask;
 }
 
-static void setRivLength(uint8_t* bitLenghtOfDciParameter, uint32_t bandwidthPRB)
+uint32_t* dci_readValueFromDCI (uint64_t dci, uint32_t bitLenghtOfDciParameter[],
+		const uint8_t sizeOfArray, uint8_t bandwidth)
 {
-	const uint32_t rivPosition = 3;
-	bitLenghtOfDciParameter[rivPosition] = ceil((log2(bandwidthPRB * ((bandwidthPRB + 1) / 2))));
-}
 
-uint32_t* dci_readValueFromDCI (uint64_t dci, uint8_t bitLenghtOfDciParameter[],
-		const uint8_t sizeOfArray)
-{
 	uint8_t bitLenghtOfDCI = 0;
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
