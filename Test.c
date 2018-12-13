@@ -71,11 +71,11 @@ Test(libTest,dci1_bitmapDecoderTest)
 	uint8_t* outputBitmap;
 	for (size_t i = 0; i < 5; i++)
 	{
-		outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
+	    outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
 		for (size_t j = 0; j < testArray[i][0]+1; j++)
 		{
 			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
-			free(outputBitmap);
 		}
+	    free(outputBitmap);
 	}
 }
