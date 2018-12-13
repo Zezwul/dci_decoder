@@ -80,7 +80,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 
 uint8_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	uint8_t val = scanf(SCNu64, dci_readArgumentsStdin);
+	uint8_t val = scanf(SCNu64, &dci_readArgumentsStdin);
 	return val;
 }
 
@@ -88,6 +88,26 @@ uint8_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 void dci_print(char* output /*?*/)
 {
 	fprintf(stdout, "%s", output);
+}
+
+static uint64_t ipow(uint64_t base, uint8_t n)
+{
+	uint64_t result = 1;
+	while(1)
+	{
+		if (n & 1)
+		{
+			result *= base;
+		}
+		n >>= 1;
+
+		if (!n)
+		{
+			break;
+		}
+		base *= base;
+	}
+	return result;
 }
 
 static uint64_t createMask (const uint8_t n)
@@ -121,6 +141,28 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, uint32_t bitLenghtOfDciParameter[]
 	return outputArray;
 }
 
+uint16_t dci_rivDecode(uint8_t bandwidthPRB, uint16_t riv,
+		uint8_t* restrict outFirstPRB, uint8_t* restrict outLastPRB)
+{
+	if ( outFirstPRB == NULL || outLastPRB == NULL)
+	{
+		printf("ERR_OCC_invalid_pointers");
+		return UINT16_MAX;
+	}
+	uint8_t PRBFirst = 0;
+	uint8_t PRBLength = 0;
+	PRBFirst = riv % bandwidthPRB;
+	PRBLength = riv / bandwidthPRB + 1;
+	if (PRBFirst + PRBLength > bandwidthPRB)
+	{
+		PRBFirst = bandwidthPRB - 1 - PRBFirst;
+		PRBLength = bandwidthPRB + 1 - PRBLength + 1;
+	}
+	*outFirstPRB = PRBFirst;
+	*outLastPRB = PRBFirst + PRBLength - 1;
+	return 0;
+}
+
 uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 {
 	uint8_t counter = bitmapBitLenght-1;
@@ -141,4 +183,3 @@ uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
 	outputRBGIndex[0] = j;
 	return outputRBGIndex;
 }
-

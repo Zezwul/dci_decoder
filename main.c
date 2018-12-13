@@ -28,5 +28,4 @@ int main(const int argc, const char* argv[])
 		break;
 	}
 
-	//dci_print(dci_output);
 }

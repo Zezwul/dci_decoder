@@ -3,6 +3,26 @@
 #include <stdio.h>
 #include "dciCommon.h"
 
+static uint16_t resourceAllocationRIV(const uint8_t amountOfPRBs, uint8_t firstPRB, uint8_t lastPRB)
+{
+	if (firstPRB > lastPRB)
+	{
+		return 0;
+	}
+
+	uint16_t riv;
+	const uint8_t PRBLength = lastPRB - firstPRB + 1;
+	if ((PRBLength - 1) <= (amountOfPRBs / 2))
+	{
+		riv = amountOfPRBs * (PRBLength - 1) + firstPRB;
+	}
+	else
+	{
+		riv = amountOfPRBs * (amountOfPRBs - PRBLength + 1) + (amountOfPRBs - 1 - firstPRB);
+	}
+	return riv;
+}
+
 Test(TestArguments, dci_ValidPositiveArguments)
 {
 	const char* args_in[][3] = {{"0", "dci0", "1"}, {"0", "dci0", "3"}, {"0", "dci0", "5"}, {"0", "dci0", "10"},
@@ -77,5 +97,53 @@ Test(libTest,dci1_bitmapDecoderTest)
 			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
 		}
 	    free(outputBitmap);
+	}
+}
+
+Test(RivTest, dci_rivPositiveValues)
+{
+	uint8_t outFirstPRB;
+	uint8_t outLastPRB;
+	uint8_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
+	uint16_t rivArr[9641];
+	uint8_t expectedOutFirstPRB[9641];
+	uint8_t expectedOutLastPRB[9641];
+	for (size_t i = 0, k = 0, l = 0; i < bandwidthPRB[k]; i++)
+	{
+		for (size_t j = i; j < bandwidthPRB[k]; j++)
+		{
+			expectedOutFirstPRB[l] = i;
+			expectedOutLastPRB[l] = j;
+			l++;
+		}
+		if(i == bandwidthPRB[k] - 1)
+		{
+		    i = -1;
+			k++;
+		}
+		if(k == 6)
+		{
+		    break;
+		}
+	}
+
+	uint16_t moveBit[] = {21, 141, 466, 1741, 4591, 9641};
+	for (size_t i = 0, j = 0; i < 9641 ; i++)
+	{
+		rivArr[i] = resourceAllocationRIV(bandwidthPRB[j],expectedOutFirstPRB[i], expectedOutLastPRB[i]);
+		if(i == moveBit[j])
+		{
+			j++;
+		}
+	}
+	for (size_t i = 0, j = 0; i < 9641; i++)
+	{
+		dci_rivDecode ( bandwidthPRB[j], rivArr[i], &outFirstPRB, &outLastPRB);
+		cr_expect_eq(outFirstPRB, expectedOutFirstPRB[i],"Error");
+		cr_expect_eq(outLastPRB, expectedOutLastPRB[i],"Error");
+		if(i == moveBit[j])
+		{
+			j++;
+		}
 	}
 }
