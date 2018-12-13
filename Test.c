@@ -59,6 +59,7 @@ Test(libTest,dci_readValueFromDCITest)
 	cr_assert(output[1] == 13, "dci_readValueFromDCI is not working propertly");
 	cr_assert(output[2] == 127, "dci_readValueFromDCI is not working propertly");
 	cr_assert(output[3] == 1, "dci_readValueFromDCI is not working propertly");
+	free(output);
 }
 
 Test(libTest,dci1_bitmapDecoderTest)
@@ -74,6 +75,7 @@ Test(libTest,dci1_bitmapDecoderTest)
 		for (size_t j = 0; j < testArray[i][0]+1; j++)
 		{
 			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
+			free(outputBitmap);
 		}
 	}
 }
