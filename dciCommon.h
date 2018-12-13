@@ -3,9 +3,11 @@
 
 #include <stdint.h>
 
+/* 2 values, which will be changed */
+#define VALUE_TO_CHANGE1 13 //[riv len] bandwidth 20
+#define VALUE_TO_CHANGE2 25 //[bitmap len] bandwidth 20
+
 /* Shared Length of parameters */
-#define FIRSTPRB 7
-#define LASTPRB 7
 #define CSIR 1
 #define SRSR 1
 #define NDI 1
@@ -16,22 +18,21 @@
 /* dci0 Length of parameters */
 #define DMRS 3
 #define DCI0_NUMBER_PARAM 8
-#define DCI0_OFFSET_ARRAY { FIRSTPRB, LASTPRB, MCS, NDI, TPC, DMRS, CSIR, SRSR };
+#define DCI0_OFFSET_ARRAY { VALUE_TO_CHANGE1, MCS, NDI, TPC, DMRS, CSIR, SRSR };
 
 /* dci1 Length of parameters */
 #define RV1 2
 #define DCI1_NUMBER_PARAM 5
-#define DCI1_OFFSET_ARRAY { MCS, HARQ, NDI, RV1, TPC };
+#define DCI1_OFFSET_ARRAY { VALUE_TO_CHANGE2, MCS, HARQ, NDI, RV1, TPC };
 
 /* dci60a Length of parameters */
 #define MCS60A 4
 #define PUSCH 2
 #define RV60A 2
 #define PDCCH 2
-
 #define DCI60A_NUMBER_PARAM 11
-#define DCI60A_OFFSET_ARRAY { FIRSTPRB, LASTPRB, MCS60A, PUSCH, HARQ, NDI,\
-	RV60A, TPC, CSIR, SRSR, PDCCH };
+#define DCI60A_OFFSET_ARRAY { VALUE_TO_CHANGE1, MCS60A, PUSCH, HARQ, NDI, RV60A, \
+							  TPC, CSIR, SRSR, PDCCH };
 
 /* Maximum values of parameters  */
 #define MAX_MCS 31
