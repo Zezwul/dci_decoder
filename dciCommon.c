@@ -203,21 +203,21 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 
 uint16_t dci_rivDecode (uint8_t bandwidthPRB, uint16_t RIV, uint8_t* restrict outFirstPRB, uint8_t* restrict outLastPRB)
 {
-	if ( outFirstPRB == NULL || outLastPRB == NULL)
-	{
-		printf("ERR_OCC_invalid_pointers");
-		return UINT16_MAX;
-	}
-	uint8_t PRBFirst = 0;
-	uint8_t PRBLength = 0;
-	PRBFirst = RIV % bandwidthPRB;
-	PRBLength = RIV / bandwidthPRB + 1;
-	if (PRBFirst + PRBLength > bandwidthPRB)
-	{
-		PRBFirst = bandwidthPRB - 1 - PRBFirst;
-		PRBLength = bandwidthPRB + 1 - PRBLength + 1;
-	}
-	*outFirstPRB = PRBFirst;
-	*outLastPRB = PRBFirst + PRBLength - 1;
-	return 0;
+    if ( outFirstPRB == NULL || outLastPRB == NULL)
+    {
+        printf("ERR_OCC_invalid_pointers");
+        return UINT16_MAX;
+    }
+    uint8_t PRBFirst = 0;
+    uint8_t PRBLength = 0;
+    PRBFirst = RIV % bandwidthPRB;
+    PRBLength = RIV / bandwidthPRB + 1;
+    if (PRBFirst + PRBLength > bandwidthPRB)
+    {
+        PRBFirst = bandwidthPRB - 1 - PRBFirst;
+        PRBLength = bandwidthPRB + 1 - PRBLength + 1;
+    }
+    *outFirstPRB = PRBFirst;
+    *outLastPRB = PRBFirst + PRBLength - 1;
+    return 0;
 }
