@@ -153,34 +153,15 @@ void dci_print(char* output /*?*/)
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t ipow(uint64_t base, uint8_t n)
-{
-    uint64_t result = 1;
-    while(1)
-    {
-        if (n & 1)
-        {
-            result *= base;
-        }
-        n >>= 1;
-
-        if (!n)
-        {
-            break;
-        }
-        base *= base;
-    }
-    return result;
-}
-
 static uint64_t createMask (const uint8_t n)
 {
-	uint64_t mask = 0;
+	uint64_t mask = 1;
 	if (n == 0)
 	{
-		return mask;
+		return 0;
 	}
-	mask = ipow(2,n) - 1;
+	mask <<= n;
+	mask -= 1;
 	return mask;
 }
 
@@ -193,16 +174,32 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	}
 
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
-//	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
-//	if (alignedToRight != CHAR_BIT)
-//	{
-//		dci >>= alignedToRight;
-//	}
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
 		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
 	}
 	return outputArray;
+}
+
+uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
+{
+	uint8_t counter = bitmapBitLenght-1;
+	uint8_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
+	uint8_t i, j = 0;
+	while (i < bitmapBitLenght)
+	{
+		if (bitmap & 1)
+		{
+			++j;
+			outputRBGIndex = realloc(outputRBGIndex,(j+1)*sizeof(*outputRBGIndex));
+			outputRBGIndex[j] = counter;
+		}
+		bitmap >>= 1;
+		counter--;
+		i++;
+	}
+	outputRBGIndex[0] = j;
+	return outputRBGIndex;
 }
 
