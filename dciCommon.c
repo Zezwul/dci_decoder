@@ -15,6 +15,7 @@ uint8_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 7, 11, 12 ,13};
 uint8_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
 
 uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth, uint8_t LengthBitsRIV)
+
 {
 	for (uint8_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
@@ -88,34 +89,15 @@ void dci_print(char* output /*?*/)
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t ipow(uint64_t base, uint8_t n)
-{
-    uint64_t result = 1;
-    while(1)
-    {
-        if (n & 1)
-        {
-            result *= base;
-        }
-        n >>= 1;
-
-        if (!n)
-        {
-            break;
-        }
-        base *= base;
-    }
-    return result;
-}
-
 static uint64_t createMask (const uint8_t n)
 {
-	uint64_t mask = 0;
+	uint64_t mask = 1;
 	if (n == 0)
 	{
-		return mask;
+		return 0;
 	}
-	mask = ipow(2,n) - 1;
+	mask <<= n;
+	mask -= 1;
 	return mask;
 }
 
@@ -128,11 +110,6 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	}
 
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
-//	uint8_t alignedToRight = CHAR_BIT-(bitLenghtOfDCI%CHAR_BIT);
-//	if (alignedToRight != CHAR_BIT)
-//	{
-//		dci >>= alignedToRight;
-//	}
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
@@ -140,8 +117,6 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	}
 	return outputArray;
 }
-
-
 
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthPRB)
 {
@@ -270,4 +245,25 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthP
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_PDCCH_parametr\n");
 	}
+}
+
+uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
+{
+	uint8_t counter = bitmapBitLenght-1;
+	uint8_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
+	uint8_t i, j = 0;
+	while (i < bitmapBitLenght)
+	{
+		if (bitmap & 1)
+		{
+			++j;
+			outputRBGIndex = realloc(outputRBGIndex,(j+1)*sizeof(*outputRBGIndex));
+			outputRBGIndex[j] = counter;
+		}
+		bitmap >>= 1;
+		counter--;
+		i++;
+	}
+	outputRBGIndex[0] = j;
+	return outputRBGIndex;
 }
