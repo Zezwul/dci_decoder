@@ -16,7 +16,7 @@ int main(const int argc, const char* argv[])
 	switch (dci_Result)
 	{
 	case dci0:
-		//dci_readValueFromDCI(inputArguments, )
+
 		break;
 	case dci1:
 

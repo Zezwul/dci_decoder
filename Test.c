@@ -48,15 +48,34 @@ Test(TestArguments, dci_ValidNegativeArguments)
 	}
 }
 
-//Test(libTest,dci_readValueFromDCITest)
-//{
-//	uint64_t dci = 0x7FFFFFFFFFFFFFEF;
-//	uint8_t sizeOfShiftArray = 4;
-//	uint8_t shiftArray[] = {1, 7, 4, 4};
-//	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray);
-//
-//	cr_assert(output[0] == 15, "dci_readValueFromDCI working fking bad");
-//	cr_assert(output[1] == 13, "dci_readValueFromDCI working fking bad");
-//	cr_assert(output[2] == 127, "dci_readValueFromDCI working fking bad");
-//	cr_assert(output[3] == 1, "dci_readValueFromDCI working fking bad");
-//}
+Test(libTest,dci_readValueFromDCITest)
+{
+	uint64_t dci = 0x7FFFFFFFFFFFFFEF;
+	uint8_t sizeOfShiftArray = 4;
+	uint8_t shiftArray[] = {1, 7, 4, 4};
+	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray);
+
+	cr_assert(output[0] == 15, "dci_readValueFromDCI is not working propertly");
+	cr_assert(output[1] == 13, "dci_readValueFromDCI is not working propertly");
+	cr_assert(output[2] == 127, "dci_readValueFromDCI is not working propertly");
+	cr_assert(output[3] == 1, "dci_readValueFromDCI is not working propertly");
+	free(output);
+}
+
+Test(libTest,dci1_bitmapDecoderTest)
+{
+	uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght);
+	uint32_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
+	uint8_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
+	uint8_t bitmapBitLenght = 25;
+	uint8_t* outputBitmap;
+	for (uint8_t i = 0; i < 5; i++)
+	{
+	    outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
+		for (uint8_t j = 0; j < testArray[i][0]+1; j++)
+		{
+			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
+		}
+	    free(outputBitmap);
+	}
+}
