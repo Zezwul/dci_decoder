@@ -3,15 +3,16 @@
 #include <stdio.h>
 #include "dciCommon.h"
 
-static uint16_t resourceAllocationRIV(const uint8_t amountOfPRBs, uint8_t firstPRB, uint8_t lastPRB)
+static uint32_t resourceAllocationRIV(const uint32_t amountOfPRBs,
+		uint32_t firstPRB, uint32_t lastPRB)
 {
 	if (firstPRB > lastPRB)
 	{
 		return 0;
 	}
 
-	uint16_t riv;
-	const uint8_t PRBLength = lastPRB - firstPRB + 1;
+	uint32_t riv;
+	const uint32_t PRBLength = lastPRB - firstPRB + 1;
 	if ((PRBLength - 1) <= (amountOfPRBs / 2))
 	{
 		riv = amountOfPRBs * (PRBLength - 1) + firstPRB;
@@ -72,8 +73,9 @@ Test(libTest,dci_readValueFromDCITest)
 {
 	uint64_t dci = 0x7FFFFFFFFFFFFFEF;
 	uint8_t sizeOfShiftArray = 4;
-	uint8_t shiftArray[] = {1, 7, 4, 4};
-	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray);
+	uint32_t shiftArray[] = {1, 7, 4, 4};
+	uint8_t bandwidth = 10;
+	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray, bandwidth);
 
 	cr_assert(output[0] == 15, "dci_readValueFromDCI is not working propertly");
 	cr_assert(output[1] == 13, "dci_readValueFromDCI is not working propertly");
@@ -84,15 +86,14 @@ Test(libTest,dci_readValueFromDCITest)
 
 Test(libTest,dci1_bitmapDecoderTest)
 {
-	uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght);
 	uint32_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
-	uint8_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
-	uint8_t bitmapBitLenght = 25;
-	uint8_t* outputBitmap;
-	for (size_t i = 0; i < 5; i++)
+	uint32_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
+	uint32_t bitmapBitLenght = 25;
+	uint32_t* outputBitmap;
+	for (uint32_t i = 0; i < 5; i++)
 	{
 	    outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
-		for (size_t j = 0; j < testArray[i][0]+1; j++)
+		for (uint32_t j = 0; j < testArray[i][0]+1; j++)
 		{
 			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
 		}
@@ -102,48 +103,21 @@ Test(libTest,dci1_bitmapDecoderTest)
 
 Test(RivTest, dci_rivPositiveValues)
 {
-	uint8_t outFirstPRB;
-	uint8_t outLastPRB;
-	uint8_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
-	uint16_t RIV[9641];
-	uint8_t expectedOutFirstPRB[9641];
-	uint8_t expectedOutLastPRB[9641];
-	for (size_t i = 0, k = 0, l = 0; i < bandwidthPRB[k]; i++)
+	uint32_t outFirstPRB;
+	uint32_t outLastPRB;
+	uint32_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
+	for (uint32_t bwIndex = 0; bwIndex < 6; bwIndex++)
 	{
-		for (size_t j = i; j < bandwidthPRB[k]; j++)
+		for (uint32_t startIdx = 0; startIdx < bandwidthPRB[bwIndex]; startIdx++)
 		{
-			expectedOutFirstPRB[l] = i;
-			expectedOutLastPRB[l] = j;
-			l++;
-		}
-		if(i == bandwidthPRB[k] - 1)
-		{
-		    i = -1;
-			k++;
-		}
-		if(k == 6)
-		{
-		    break;
-		}
-	}
-
-	uint16_t moveBit[] = {21, 141, 466, 1741, 4591, 9641};
-	for (size_t i = 0, j = 0; i < 9641 ; i++)
-	{
-		RIV[i] = resourceAllocationRIV(bandwidthPRB[j],expectedOutFirstPRB[i], expectedOutLastPRB[i]);
-		if(i == moveBit[j])
-		{
-			j++;
-		}
-	}
-	for (size_t i = 0, j = 0; i < 9641; i++)
-	{
-		dci_rivDecode ( bandwidthPRB[j], RIV[i], &outFirstPRB, &outLastPRB);
-		cr_expect_eq(outFirstPRB, expectedOutFirstPRB[i],"Error");
-		cr_expect_eq(outLastPRB, expectedOutLastPRB[i],"Error");
-		if(i == moveBit[j])
-		{
-			j++;
+			for (uint32_t endIdx = startIdx; endIdx < bandwidthPRB[bwIndex]; endIdx++)
+			{
+				uint32_t rivValue = resourceAllocationRIV(bandwidthPRB[bwIndex], startIdx, endIdx);
+				dci_rivDecode ( bandwidthPRB[bwIndex], rivValue, &outFirstPRB, &outLastPRB);
+				cr_expect_eq(outFirstPRB, startIdx,"Error");
+				cr_expect_eq(outLastPRB, endIdx,"Error");
+			}
 		}
 	}
 }
+
