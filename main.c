@@ -16,7 +16,10 @@ int main(const int argc, const char* argv[])
 	switch (dci_Result)
 	{
 	case dci0:
-
+	{
+	    dci_readValueFromDCI(inputArguments, {DCI0_OFFSET_INPUT_ARRAY}, DCI0_NUMBER_PARAM,
+	            bandwidth, dci_Result);
+	}
 		break;
 	case dci1:
 

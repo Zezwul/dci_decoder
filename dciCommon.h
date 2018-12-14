@@ -22,8 +22,8 @@
 /* dci0 Length of parameters */
 #define DMRS 3
 #define DCI0_NUMBER_PARAM 9
-#define DCI0_OFFSET_INPUT_ARRAY { FORMAT_FLAG, HOPPING_FLAG, RIV, MCS0, \
-								NDI0, TPC0, DMRS, CSIR0, SRSR0 };
+#define DCI0_OFFSET_INPUT_ARRAY FORMAT_FLAG, HOPPING_FLAG, RIV, MCS0, \
+								NDI0, TPC0, DMRS, CSIR0, SRSR0;
 #define DCI0_OFFSET_ARRAY { RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
 
 /* dci1 Length of parameters */
@@ -73,8 +73,8 @@ enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPU
 void dci1_CorrectnessParameters(uint8_t* dciParam);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
-uint8_t dci_lengthOfRIVviaBandwidth(uint8_t bandwidth);
-uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
+uint32_t dci_lengthOfRIVviaBandwidth(uint8_t bandwidth);
+uint32_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
 
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
@@ -88,7 +88,7 @@ uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
  *
 **********************************************************************************************************/
 uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bitLenghtOfDciParameter[],
-		const uint8_t sizeOfArray, uint8_t bandwidth);
+        const uint8_t sizeOfArray, uint32_t bandwidth, dciType selectedDci);
 
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************
@@ -119,8 +119,9 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght);
  *
  *****************************************************************************************************/
 
-void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
-		uint8_t* restrict const prb_p);
+void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const dci_p,
+        uint32_t* restrict prb_p);
+
 uint8_t dci_readStdin(uint64_t* dci_readArgumentsStdin);
 
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
