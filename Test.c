@@ -120,4 +120,3 @@ Test(RivTest, dci_rivPositiveValues)
 		}
 	}
 }
-
