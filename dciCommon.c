@@ -7,18 +7,18 @@
 #include <math.h>
 #include <string.h>
 
-char* dciStrArguments[] = {"dci0", "dci1","dci60a"};
+const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint8_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 uint8_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 uint8_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 7, 11, 12 ,13};
 
-uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth)
+uint8_t dci_lengthOfRIVviaBandwidth(uint8_t bandwidth)
 {
 	uint8_t LengthBitsRIV;
 	for (uint8_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
-		if (Bandwidth == dciBandwidth[i])
+		if (bandwidth == dciBandwidth[i])
 		{
 			LengthBitsRIV = possibleLengthBitsOfRIV[i];
 			return LengthBitsRIV;
@@ -26,18 +26,18 @@ uint8_t dci_lengthOfRIVviaBandwidth(uint8_t Bandwidth)
 		else
 		{
 			fprintf(stdout, "ERR_OCC_Typed_bandwidth_is_wrong");
-			return 0;
 		}
 	}
+	return 0;
 }
 
-uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth)
+uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth)
 {
 	uint8_t bitmapBitLenght;
 	uint8_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
 	for (uint8_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
-		if (Bandwidth == dciBandwidth[i])
+		if (bandwidth == dciBandwidth[i])
 		{
 			bitmapBitLenght = possibleLengthBitsRBG[i];
 			return bitmapBitLenght;
@@ -45,13 +45,13 @@ uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t Bandwidth)
 		else
 		{
 			fprintf(stdout, "ERR_OCC_Typed_bandwidth_is_wrong");
-			return 0;
 		}
 	}
+	return 0;
 }
 
 void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const  dci_p,
-		uint8_t* restrict const prb_p )
+		uint8_t* restrict prb_p)
 {
 	dciType dciResult = dci0;
 	uint8_t bandwidthPRB = 100;
@@ -78,9 +78,9 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 	*dci_p = dciResult;
 }
 
-uint8_t dci_readStdin(uint64_t dci_readArgumentsStdin)
+uint8_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	uint8_t val = scanf("%li", &dci_readArgumentsStdin);
+	uint8_t val = (uint8_t)scanf(SCNu64, &dci_readArgumentsStdin);
 	return val;
 }
 
@@ -90,7 +90,7 @@ void dci_print(char* output /*?*/)
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t createMask (const uint8_t n)
+static uint64_t createMask(const uint32_t n)
 {
 	uint64_t mask = 1;
 	if (n == 0)
@@ -102,9 +102,10 @@ static uint64_t createMask (const uint8_t n)
 	return mask;
 }
 
-uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParameter[], const uint8_t sizeOfArray)
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bitLenghtOfDciParameter[],
+		const uint8_t sizeOfArray, uint8_t bandwidth)
 {
-	uint8_t bitLenghtOfDCI = 0;
+	uint32_t bitLenghtOfDCI = 0;
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
 		bitLenghtOfDCI += bitLenghtOfDciParameter[i];
@@ -113,20 +114,20 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, const uint8_t bitLenghtOfDciParame
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
-		outputArray[i] = dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]);
+		outputArray[i] = (uint32_t)(dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]));
 		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
 	}
 	return outputArray;
 }
 
-void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthPRB)
+void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
 {
-	if (dciParam[paramFirstPRB0] >= dciBandwidthPRB)
+	if (dciParam[paramFirstPRB0] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
 	}
 
-	if (dciParam[paramFirstPRB0] > dciParam[paramLastPRB0] || dciParam[paramFirstPRB0] >= dciBandwidthPRB)
+	if (dciParam[paramFirstPRB0] > dciParam[paramLastPRB0] || dciParam[paramFirstPRB0] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
 	}
@@ -179,7 +180,7 @@ void dci1_CorrectnessParameters(uint8_t* dciParam)
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_NDI_parametr\n");
 	}
 
-	if (dciParam[paramRV1] > MAX_RV1)
+	if (dciParam[paramRV1] > MAX_RV)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_RV_parametr\n");
 	}
@@ -190,14 +191,14 @@ void dci1_CorrectnessParameters(uint8_t* dciParam)
 	}
 }
 
-void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthPRB)
+void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
 {
-	if (dciParam[paramFirstPRB60a] >= dciBandwidthPRB)
+	if (dciParam[paramFirstPRB60a] >= dci60a_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
 	}
 
-	if (dciParam[paramFirstPRB60a] > dciParam[paramLastPRB60a] || dciParam[paramFirstPRB60a] >= dciBandwidthPRB)
+	if (dciParam[paramFirstPRB60a] > dciParam[paramLastPRB60a] || dciParam[paramFirstPRB60a] >= dci60a_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
 	}
@@ -222,7 +223,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthP
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 	}
 
-	if (dciParam[paramRV60a] > MAX_RV60A)
+	if (dciParam[paramRV60a] > MAX_RV)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_RV_parametr\n");
 	}
@@ -248,17 +249,39 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dciBandwidthP
 	}
 }
 
-uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght)
+uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
+		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB)
 {
-	uint8_t counter = bitmapBitLenght-1;
-	uint8_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
-	uint8_t i, j = 0;
+	if (outFirstPRB == NULL || outLastPRB == NULL)
+	{
+		printf("ERR_OCC_invalid_pointers");
+		return UINT16_MAX;
+	}
+	uint32_t PRBFirst = 0;
+	uint32_t PRBLength = 0;
+	PRBFirst = (riv % bandwidthPRB);
+	PRBLength = (riv / bandwidthPRB + 1);
+	if (PRBFirst + PRBLength > bandwidthPRB)
+	{
+		PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);
+		PRBLength = (uint32_t)(bandwidthPRB + 1 - PRBLength + 1);
+	}
+	*outFirstPRB = PRBFirst;
+	*outLastPRB = PRBFirst + PRBLength - 1;
+	return 0;
+}
+
+uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
+{
+	uint32_t counter = bitmapBitLenght-1;
+	uint32_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
+	uint32_t i = 0, j = 0;
 	while (i < bitmapBitLenght)
 	{
 		if (bitmap & 1)
 		{
 			++j;
-			outputRBGIndex = realloc(outputRBGIndex,(j+1)*sizeof(*outputRBGIndex));
+			outputRBGIndex = realloc(outputRBGIndex, (j + 1) * sizeof(*outputRBGIndex));
 			outputRBGIndex[j] = counter;
 		}
 		bitmap >>= 1;
