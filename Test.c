@@ -105,45 +105,17 @@ Test(RivTest, dci_rivPositiveValues)
 	uint8_t outFirstPRB;
 	uint8_t outLastPRB;
 	uint8_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
-	uint16_t RIV[9641];
-	uint8_t expectedOutFirstPRB[9641];
-	uint8_t expectedOutLastPRB[9641];
-	for (size_t i = 0, k = 0, l = 0; i < bandwidthPRB[k]; i++)
+	for (size_t bwIndex = 0; bwIndex < 6; bwIndex++)
 	{
-		for (size_t j = i; j < bandwidthPRB[k]; j++)
+		for (size_t startIdx = 0; startIdx < bandwidthPRB[bwIndex]; startIdx++)
 		{
-			expectedOutFirstPRB[l] = i;
-			expectedOutLastPRB[l] = j;
-			l++;
-		}
-		if(i == bandwidthPRB[k] - 1)
-		{
-		    i = -1;
-			k++;
-		}
-		if(k == 6)
-		{
-		    break;
-		}
-	}
-
-	uint16_t moveBit[] = {21, 141, 466, 1741, 4591, 9641};
-	for (size_t i = 0, j = 0; i < 9641 ; i++)
-	{
-		RIV[i] = resourceAllocationRIV(bandwidthPRB[j],expectedOutFirstPRB[i], expectedOutLastPRB[i]);
-		if(i == moveBit[j])
-		{
-			j++;
-		}
-	}
-	for (size_t i = 0, j = 0; i < 9641; i++)
-	{
-		dci_rivDecode ( bandwidthPRB[j], RIV[i], &outFirstPRB, &outLastPRB);
-		cr_expect_eq(outFirstPRB, expectedOutFirstPRB[i],"Error");
-		cr_expect_eq(outLastPRB, expectedOutLastPRB[i],"Error");
-		if(i == moveBit[j])
-		{
-			j++;
+			for (size_t endIdx = startIdx; endIdx < bandwidthPRB[bwIndex]; endIdx++)
+			{
+				uint16_t rivValue = resourceAllocationRIV(bandwidthPRB[bwIndex], startIdx, endIdx);
+				dci_rivDecode ( bandwidthPRB[bwIndex], rivValue, &outFirstPRB, &outLastPRB);
+				cr_expect_eq(outFirstPRB, startIdx,"Error");
+				cr_expect_eq(outLastPRB, endIdx,"Error");
+			}
 		}
 	}
 }
