@@ -122,7 +122,7 @@ uint32_t* dci_readValueFromDCI (uint64_t dci, uint32_t bitLenghtOfDciParameter[]
 	return outputArray;
 }
 
-uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint16_t riv,
+uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
 		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB)
 {
 	if ( outFirstPRB == NULL || outLastPRB == NULL)
@@ -132,8 +132,8 @@ uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint16_t riv,
 	}
 	uint32_t PRBFirst = 0;
 	uint32_t PRBLength = 0;
-	PRBFirst = (uint16_t)(riv % bandwidthPRB);
-	PRBLength = (uint16_t)(riv / bandwidthPRB + 1);
+	PRBFirst = (riv % bandwidthPRB);
+	PRBLength = (riv / bandwidthPRB + 1);
 	if (PRBFirst + PRBLength > bandwidthPRB)
 	{
 		PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);

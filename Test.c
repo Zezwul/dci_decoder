@@ -3,15 +3,16 @@
 #include <stdio.h>
 #include "dciCommon.h"
 
-static uint16_t resourceAllocationRIV(const uint8_t amountOfPRBs, uint8_t firstPRB, uint8_t lastPRB)
+static uint32_t resourceAllocationRIV(const uint32_t amountOfPRBs,
+		uint32_t firstPRB, uint32_t lastPRB)
 {
 	if (firstPRB > lastPRB)
 	{
 		return 0;
 	}
 
-	uint16_t riv;
-	const uint8_t PRBLength = lastPRB - firstPRB + 1;
+	uint32_t riv;
+	const uint32_t PRBLength = lastPRB - firstPRB + 1;
 	if ((PRBLength - 1) <= (amountOfPRBs / 2))
 	{
 		riv = amountOfPRBs * (PRBLength - 1) + firstPRB;
@@ -85,15 +86,14 @@ Test(libTest,dci_readValueFromDCITest)
 
 Test(libTest,dci1_bitmapDecoderTest)
 {
-	uint8_t* dci1_bitmapDecoder(uint32_t bitmap, uint8_t bitmapBitLenght);
 	uint32_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
-	uint8_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
-	uint8_t bitmapBitLenght = 25;
-	uint8_t* outputBitmap;
-	for (uint8_t i = 0; i < 5; i++)
+	uint32_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
+	uint32_t bitmapBitLenght = 25;
+	uint32_t* outputBitmap;
+	for (uint32_t i = 0; i < 5; i++)
 	{
 	    outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
-		for (uint8_t j = 0; j < testArray[i][0]+1; j++)
+		for (uint32_t j = 0; j < testArray[i][0]+1; j++)
 		{
 			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
 		}
@@ -103,16 +103,16 @@ Test(libTest,dci1_bitmapDecoderTest)
 
 Test(RivTest, dci_rivPositiveValues)
 {
-	uint8_t outFirstPRB;
-	uint8_t outLastPRB;
-	uint8_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
-	for (size_t bwIndex = 0; bwIndex < 6; bwIndex++)
+	uint32_t outFirstPRB;
+	uint32_t outLastPRB;
+	uint32_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
+	for (uint32_t bwIndex = 0; bwIndex < 6; bwIndex++)
 	{
-		for (size_t startIdx = 0; startIdx < bandwidthPRB[bwIndex]; startIdx++)
+		for (uint32_t startIdx = 0; startIdx < bandwidthPRB[bwIndex]; startIdx++)
 		{
-			for (size_t endIdx = startIdx; endIdx < bandwidthPRB[bwIndex]; endIdx++)
+			for (uint32_t endIdx = startIdx; endIdx < bandwidthPRB[bwIndex]; endIdx++)
 			{
-				uint16_t rivValue = resourceAllocationRIV(bandwidthPRB[bwIndex], startIdx, endIdx);
+				uint32_t rivValue = resourceAllocationRIV(bandwidthPRB[bwIndex], startIdx, endIdx);
 				dci_rivDecode ( bandwidthPRB[bwIndex], rivValue, &outFirstPRB, &outLastPRB);
 				cr_expect_eq(outFirstPRB, startIdx,"Error");
 				cr_expect_eq(outLastPRB, endIdx,"Error");
@@ -120,3 +120,4 @@ Test(RivTest, dci_rivPositiveValues)
 		}
 	}
 }
+

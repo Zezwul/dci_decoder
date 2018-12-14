@@ -100,7 +100,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 		uint8_t* restrict const prb_p);
 uint8_t dci_readStdin(uint64_t* dci_readArgumentsStdin);
 
-uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint16_t riv,
+uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
 		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
 
 void dci_print(char* output);
