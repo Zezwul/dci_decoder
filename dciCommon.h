@@ -51,7 +51,16 @@
 #define MAX_PUSCH 3
 #define MAX_PDCCH 3
 
-#define AMOUNT_OF_BANDWIDTHS 6
+typedef enum bandwidth_t
+{
+	BW_1_4MHz,
+	BW_3MHz,
+	BW_5MHz,
+	BW_10MHz,
+	BW_15MHz,
+	BW_20MHz,
+	AMOUNT_OF_BANDWIDTHS
+} bandwidth_t;
 
 typedef enum dciType { dci0, dci1, dci60a, maxDci } dciType;
 enum dci1_Parameters { paramMCS1, paramHARQ1, paramNDI1, paramRV1, paramTPC1 };
