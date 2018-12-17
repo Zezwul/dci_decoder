@@ -87,8 +87,7 @@ uint8_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
  * @param[in]	dci_readValueFromDCI_p: 	pointer to array containing a DCI parameter decofe from readed dci
  *
 **********************************************************************************************************/
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bitLenghtOfDciParameter[],
-		const uint8_t sizeOfArray, uint8_t bandwidth);
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selectedDci);
 
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************

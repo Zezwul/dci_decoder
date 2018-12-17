@@ -102,22 +102,45 @@ static uint64_t createMask(const uint32_t n)
 	return mask;
 }
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bitLenghtOfDciParameter[],
-		const uint8_t sizeOfArray, uint8_t bandwidth)
+uint64_t getBits(uint64_t dci, uint32_t startRead, uint32_t shift)
 {
-	uint32_t bitLenghtOfDCI = 0;
-	for (uint8_t i = 0; i < sizeOfArray; i++)
-	{
-		bitLenghtOfDCI += bitLenghtOfDciParameter[i];
-	}
+    return (dci >> (startRead + 1 - shift)) & ~(~0 << shift);
+}
 
-	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
-	for (uint8_t i = 0; i < sizeOfArray; i++)
-	{
-		outputArray[i] = (uint32_t)(dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]));
-		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1] - 1;
-	}
-	return outputArray;
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selectedDci)
+{
+    uint32_t sizeOfArray = 0;
+    uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
+    uint32_t* bitLenghtOfDciParameter;
+    if (selectedDci == dci0)
+    {
+        uint32_t valueToChange = 31;
+        for (uint32_t i = 0; i < DCI1_NUMBER_PARAM; i++)
+        {
+            outputArray[i] = getbits(dci, valueToChange, dci0_offsetArray[i]);
+            valueToChange -= dci0_offsetArray[i];
+        }
+    }
+    else if ( selectedDci == dci1)
+    {
+        uint32_t valueToChange = dci1_numberOfAllocatedBytes(bandwidth);
+        valueToChange = valueToChange * CHAR_BIT - 1;
+        for (uint32_t i = 0; i < DCI1_NUMBER_PARAM; i++)
+        {
+            outputArray[i] = getbits(dci, valueToChange, dci1_offsetArray[i]);
+            valueToChange -= dci1_offsetArray[i];
+        }
+    }
+    else if ( selectedDci == dci60a)
+    {
+        uint32_t valueToChange = 31;
+        for (uint32_t i = 0; i < DCI1_NUMBER_PARAM; i++)
+        {
+            outputArray[i] = getbits(dci, valueToChange, dci60a_offsetArray[i]);
+            valueToChange -= dci60a_offsetArray[i];
+        }
+    }
+    return outputArray;
 }
 
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
