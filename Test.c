@@ -44,30 +44,33 @@ Test(TestArguments, dci_ValidPositiveArguments)
 	}
 }
 
-//Test(TestArguments, dci_ValidNegativeArguments)
-//{
-//	const char* args_in[][3] = {{"0", "ala", "-1"}, {"0", "dci31", "0"}, {"0", "dci21", "2.1"}, {"0", "dci09", "9999999999"},
-//			{"0", "dci60A", "51"}, {"0", "dci60abc", "33"}, {"0", "!@#$%^&*(", "103"}, {"0", "dci-1", "151"},
-//			{"0", "dci6size0", "-100000"}, {"0", "0dci", "202"}};
-//	uint8_t dci_bitLengthArray_expected[] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-//	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0 };
-//
-//	uint8_t bandwidthPRB;
-//	dciType dciResult;
-//	for (size_t i = 0; i < 10; i++)
-//	{
-//		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
-//		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
-//		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
-//	}
-//
-//	for (size_t i = 0; i < 10; i++)
-//	{
-//		dci_defineDci(9999, args_in[i], &dciResult, &bandwidthPRB);
-//		cr_expect_eq(bandwidthPRB, 100,"Error");
-//		cr_expect_eq(dciResult, dci0,"Error");
-//	}
-//}
+Test(TestArguments, dci_ValidNegativeArguments)
+{
+	const char* args_in[][3] = {{"0", "ala", "-1"}, {"0", "dci31", "0"}, {"0", "dci21", "2.1"}, {"0", "dci09", "9999999999"},
+			{"0", "dci60A", "51"}, {"0", "dci60abc", "33"}, {"0", "!@#$%^&*(", "103"}, {"0", "dci-1", "151"},
+			{"0", "dci6size0", "-100000"}, {"0", "0dci", "202"}};
+	uint8_t dci_bitLengthArray_expected[] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0 };
+
+	uint32_t bandwidthPRB;
+	dciType dciResult;
+
+	for (size_t i = 0; i < 10; i++)
+	{
+	    cr_log_warn("Loop 1 pass no. %d...", i);
+		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
+		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
+		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
+	}
+
+	for (size_t i = 0; i < 10; i++)
+	{
+	    cr_log_warn("Loop 2 pass no. %d...", i);
+		dci_defineDci(9999, args_in[i], &dciResult, &bandwidthPRB);
+		cr_expect_eq(bandwidthPRB, 100,"Error");
+		cr_expect_eq(dciResult, dci0,"Error");
+	}
+}
 
 Test(libTest,dci_readValueFromDCITest)
 {
@@ -76,10 +79,10 @@ Test(libTest,dci_readValueFromDCITest)
 	dciType selectedDci = 1;
 	uint32_t* output = dci_readValueFromDCI (dci, bandwidth, selectedDci);
 
-	cr_assert(output[0] == 2, "dci_readValueFromDCI is not working propertly (1)");
-	cr_assert(output[1] == 2, "dci_readValueFromDCI is not working propertly (2)");
-	cr_assert(output[2] == 1, "dci_readValueFromDCI is not working propertly (3)");
-	cr_assert(output[3] == 5, "dci_readValueFromDCI is not working propertly (4)");
+	cr_assert(output[0] == 2, "Expected %d, got %d", 2, output[0]);
+	cr_assert(output[1] == 2, "Expected %d, got %d", 2, output[1]);
+	cr_assert(output[2] == 1, "Expected %d, got %d", 1, output[2]);
+	cr_assert(output[3] == 5, "Expected %d, got %d", 5, output[3]);
 	free(output);
 }
 

@@ -11,6 +11,14 @@ const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
+uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
+{ FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, NDI, TPC, DMRS, CSIR, SRSR };
+
+uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+
+uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
+        TPC, CSIR, SRSR, PDCCH };
+
 uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
@@ -59,7 +67,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 				break;
 			}
 		}
-		for (uint32_t i = 0; i < sizeof(dciBandwidth) / sizeof(uint8_t); ++i)
+		for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
 		{
 			if ((uint32_t)atoi(argv[2]) == dciBandwidth[i])
 			{
@@ -116,23 +124,20 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selecte
 	uint32_t* bitLenghtOfDciParameter;
     if (selectedDci == dci0)
     {
-    	uint32_t temp[]= {DCI0_OFFSET_INPUT_ARRAY};
         sizeOfArray = DCI0_NUMBER_PARAM;
-    	bitLenghtOfDciParameter = initArray(temp, sizeOfArray);
+    	bitLenghtOfDciParameter = initArray(dci0_offsetArray, sizeOfArray);
         bitLenghtOfDciParameter[2] = dci_lengthOfRIVviaBandwidth(bandwidth);
     }
     else if ( selectedDci == dci1)
     {
-    	uint32_t temp[] = {DCI1_OFFSET_ARRAY};
     	sizeOfArray = DCI1_NUMBER_PARAM;
-    	bitLenghtOfDciParameter = initArray(temp, sizeOfArray);
+    	bitLenghtOfDciParameter = initArray(dci1_offsetArray, sizeOfArray);
         bitLenghtOfDciParameter[1] = dci1_lengthOfBitmapViaBandwidth(bandwidth);
     }
     else if ( selectedDci == dci60a)
     {
-    	uint32_t temp[] = {DCI60A_OFFSET_ARRAY};
     	sizeOfArray = DCI60A_NUMBER_PARAM;
-    	bitLenghtOfDciParameter = initArray(temp, sizeOfArray);
+    	bitLenghtOfDciParameter = initArray(dci60a_offsetArray, sizeOfArray);
         bitLenghtOfDciParameter[1] = dci_lengthOfRIVviaBandwidth(bandwidth);
     }
 
