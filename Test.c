@@ -46,19 +46,34 @@ Test(TestArguments, dci_ValidPositiveArguments)
 
 Test(TestArguments, dci_ValidNegativeArguments)
 {
-	const char* args_in[][3] = {{"0", "ala", "-1"}, {"0", "dci31", "0"}, {"0", "dci21", "2.1"}, {"0", "dci09", "9999999999"},
-			{"0", "dci60A", "51"}, {"0", "dci60abc", "33"}, {"0", "!@#$%^&*(", "103"}, {"0", "dci-1", "151"},
-			{"0", "dci6size0", "-100000"}, {"0", "0dci", "202"}};
-	uint8_t dci_bitLengthArray_expected[] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0, dci0 };
+	const char* args_in[][3] = {
+			{"0", "ala", "-1"},
+			{"0", "dci31", "0"},
+			{"0", "dci21", "2.1"},
+			{"0", "dci09", "9999999999"},
+			{"0", "dci60A", "51"},
+			{"0", "dci60abc", "33"},
+			{"0", "!@#$%^&*(", "103"},
+			{"0", "dci-1", "151"},
+			{"0", "dci6size0", "-100000"},
+			{"0", "0dci", "202"}
+	};
+	uint8_t dci_bitLength_expected = 100;
+	dciType dci_expected = dci0;
 
 	uint8_t bandwidthPRB;
 	dciType dciResult;
 	for (size_t i = 0; i < 10; i++)
 	{
 		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
-		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
-		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
+		cr_expect_eq(bandwidthPRB, dci_bitLength_expected,
+					 "Expected %d, got %d!",
+					 dci_bitLength_expected,
+					 bandwidthPRB);
+		cr_expect_eq(dciResult, dci_expected,
+					 "Expected %d, got %d!",
+					 dci_expected,
+					 dciResult);
 	}
 
 	for (size_t i = 0; i < 10; i++)
