@@ -3,6 +3,6 @@
 .settings/
 Debug/
 dataLib.c
-test.out
+*.out
 *.orig
 *.*.orig
