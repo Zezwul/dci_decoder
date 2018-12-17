@@ -10,6 +10,7 @@
 /* Shared Length of parameters */
 #define FORMAT_FLAG 1
 #define HOPPING_FLAG 1
+#define RA 1
 #define RIV 13
 #define CSIR 1
 #define SRSR 1
@@ -22,21 +23,21 @@
 /* dci0 Length of parameters */
 #define DMRS 3
 #define DCI0_NUMBER_PARAM 9
-#define DCI0_OFFSET_INPUT_ARRAY FORMAT_FLAG, HOPPING_FLAG, RIV, MCS0, \
-								NDI0, TPC0, DMRS, CSIR0, SRSR0;
-#define DCI0_OFFSET_ARRAY { RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
+#define DCI0_OFFSET_INPUT_ARRAY FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, \
+								NDI, TPC, DMRS, CSIR, SRSR
+#define DCI0_OFFSET_ARRAY RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR
 
 /* dci1 Length of parameters */
-#define DCI1_NUMBER_PARAM 5
-#define DCI1_OFFSET_ARRAY { BITMAP_LEN, MCS, HARQ, NDI, RV, TPC };
+#define DCI1_NUMBER_PARAM 7
+#define DCI1_OFFSET_ARRAY RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC
 
 /* dci60a Length of parameters */
 #define MCS60A 4
 #define PUSCH 2
 #define PDCCH 2
 #define DCI60A_NUMBER_PARAM 11
-#define DCI60A_OFFSET_ARRAY { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV, \
-							  TPC, CSIR, SRSR, PDCCH };
+#define DCI60A_OFFSET_ARRAY RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV, \
+							  TPC, CSIR, SRSR, PDCCH
 
 /* Maximum values of parameters  */
 #define MAX_MCS 31
@@ -66,15 +67,15 @@ typedef enum dciType { dci0, dci1, dci60a, maxDci } dciType;
 enum dci1_Parameters { paramMCS1, paramHARQ1, paramNDI1, paramRV1, paramTPC1 };
 enum dci0_Parameters { paramFirstPRB0, paramLastPRB0, paramMCS0, paramNDI0, paramTPC0,
 					   paramDMRS0, paramCSIreq0, paramSRSreq0 };
-enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPUSCH60a,\
-						 paramHARQ60a, paramNDI60a, paramRV60a, paramTPC60a, paramCSIreq60a,\
+enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPUSCH60a,
+						 paramHARQ60a, paramNDI60a, paramRV60a, paramTPC60a, paramCSIreq60a,
 						 paramSRSreq60a, paramPDCCH60a };
 
 void dci1_CorrectnessParameters(uint8_t* dciParam);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
-uint32_t dci_lengthOfRIVviaBandwidth(uint8_t bandwidth);
-uint32_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
+uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth);
+uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth);
 
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
@@ -87,8 +88,7 @@ uint32_t dci1_lengthOfBitmapViaBandwidth(uint8_t bandwidth);
  * @param[in]	dci_readValueFromDCI_p: 	pointer to array containing a DCI parameter decofe from readed dci
  *
 **********************************************************************************************************/
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bitLenghtOfDciParameter[],
-        const uint8_t sizeOfArray, uint32_t bandwidth, dciType selectedDci);
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selectedDci);
 
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************

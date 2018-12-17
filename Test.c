@@ -71,17 +71,15 @@ Test(TestArguments, dci_ValidPositiveArguments)
 
 Test(libTest,dci_readValueFromDCITest)
 {
-	uint64_t dci = 0x7FFFFFFFFFFFFFEF;
-	uint8_t sizeOfShiftArray = 4;
-	uint32_t shiftArray[] = {1, 7, 4, 4};
+	uint64_t dci = 0x1210000DBA;
 	uint8_t bandwidth = 10;
-	dciType selectedDci = dci1;
-	uint32_t* output = dci_readValueFromDCI (dci, shiftArray, sizeOfShiftArray, bandwidth, selectedDci);
+	dciType selectedDci = 1;
+	uint32_t* output = dci_readValueFromDCI (dci, bandwidth, selectedDci);
 
-	cr_assert(output[0] == 15, "dci_readValueFromDCI is not working propertly");
-	cr_assert(output[1] == 13, "dci_readValueFromDCI is not working propertly");
-	cr_assert(output[2] == 127, "dci_readValueFromDCI is not working propertly");
-	cr_assert(output[3] == 1, "dci_readValueFromDCI is not working propertly");
+	cr_assert(output[0] == 2, "dci_readValueFromDCI is not working propertly (1)");
+	cr_assert(output[1] == 2, "dci_readValueFromDCI is not working propertly (2)");
+	cr_assert(output[2] == 1, "dci_readValueFromDCI is not working propertly (3)");
+	cr_assert(output[3] == 5, "dci_readValueFromDCI is not working propertly (4)");
 	free(output);
 }
 
@@ -104,6 +102,7 @@ Test(libTest,dci1_bitmapDecoderTest)
 
 Test(RivTest, dci_rivPositiveValues)
 {
+	dci_readValueFromDCI(888, 10, 1);
 	uint32_t outFirstPRB;
 	uint32_t outLastPRB;
 	uint32_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};
