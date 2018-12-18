@@ -24,36 +24,16 @@ const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
-uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth)
+uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
-    uint32_t LengthBitsRIV;
-	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
-	{
-		if (bandwidth == dciBandwidth[i])
-		{
-			LengthBitsRIV = possibleLengthBitsOfRIV[i];
-			return LengthBitsRIV;
-		}
-	}
-    fprintf(stdout, "ERR_OCC_Typed_bandwidth_is_wrong");
-	return 0;
+    return possibleLengthBitsOfRIV[bandwidth];
 }
 
-uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth)
+uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
 {
     uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
-    uint32_t bitmapBitLenght;
-	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
-	{
-		if (bandwidth == dciBandwidth[i])
-		{
-			bitmapBitLenght = possibleLengthBitsRBG[i];
-			return bitmapBitLenght;
-		}
-	}
-    fprintf(stdout, "ERR_OCC_Typed_bandwidth_is_wrong");
-	return 0;
+    return possibleLengthBitsRBG[bandwidth];
 }
 
 bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* restrict const dci_p,

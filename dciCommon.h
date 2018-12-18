@@ -107,10 +107,10 @@ enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPU
 						 paramHARQ60a, paramNDI60a, paramRV60a, paramTPC60a, paramCSIreq60a,
 						 paramSRSreq60a, paramPDCCH60a };
 
-uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth);
+uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
 void dci1_CorrectnessParameters(uint8_t* dciParam);
-uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth);
+uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
 
 
