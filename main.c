@@ -18,7 +18,7 @@ int main(const int argc, const char* argv[])
 	case dci0:
 	{
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
-        { FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, NDI, TPC, DMRS, CSIR, SRSR };
+        { FORMAT_FLAG, HOPPING_FLAG, RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
         dci0_offsetArray [dci0_rivOutput] = dci_lengthOfRIVviaBandwidth(dci_bandwidth);
 		break;
 	}
