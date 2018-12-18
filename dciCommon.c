@@ -80,9 +80,9 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 	*dci_p = dciResult;
 }
 
-uint8_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
+uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	uint8_t val = (uint8_t)scanf(SCNu64, &dci_readArgumentsStdin);
+	uint32_t val = (uint32_t)scanf("%lx", dci_readArgumentsStdin);
 	return val;
 }
 
