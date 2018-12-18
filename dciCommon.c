@@ -65,7 +65,7 @@ uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
     uint32_t LengthBitsRIV;
-	for (uint32_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
 		if (bandwidth == dciBandwidth[i])
 		{
@@ -81,7 +81,7 @@ uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
     uint32_t bitmapBitLenght;
-	for (uint8_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
 		if (bandwidth == dciBandwidth[i])
 		{
