@@ -57,7 +57,6 @@ Test(TestArguments, dci_ValidNegativeArguments)
 
 	for (size_t i = 0; i < 10; i++)
 	{
-	    cr_log_warn("Loop 1 pass no. %d...", i);
 		dci_defineDci(3, args_in[i], &dciResult, &bandwidthPRB);
 		cr_expect_eq(bandwidthPRB, dci_bitLengthArray_expected[i],"Error");
 		cr_expect_eq(dciResult, dci_str_expected[i],"Error");
@@ -65,7 +64,6 @@ Test(TestArguments, dci_ValidNegativeArguments)
 
 	for (size_t i = 0; i < 10; i++)
 	{
-	    cr_log_warn("Loop 2 pass no. %d...", i);
 		dci_defineDci(9999, args_in[i], &dciResult, &bandwidthPRB);
 		cr_expect_eq(bandwidthPRB, 100,"Error");
 		cr_expect_eq(dciResult, dci0,"Error");
