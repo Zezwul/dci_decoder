@@ -43,7 +43,7 @@ typedef enum dci0_OutputParameters
 	dci0_csiRqstOutput,
 	dci0_srsRqstOutput,
 	dci0_maxAmountOfArgumentsOutput
-} dci0_InputParameters;
+} dci0_OutputParameters;
 
 typedef enum dci0_InputParameters
 {
@@ -57,19 +57,19 @@ typedef enum dci0_InputParameters
 	dci0_csiRqst,
 	dci0_srsRqst,
 	dci0_maxAmmountOfArguments
-} dci0_OutputParameters;
+} dci0_InputParameters;
 
 typedef enum dci1_OutputParameters
 {
-	dci1_rbgNumber,
-	dci1_rbgIndex,
+	dci1_raType,
+	dci1_bitmap,
 	dci1_mcsindex,
 	dci1_harq,
 	dci1_newDataIndicator,
 	dci1_redundancyVersion,
 	dci1_pucchTpcCommand,
 	dci1_maxAmountOfArguments
-} dci1_InputParameters;
+} dci1_OutputParameters;
 
 typedef enum bandwidth_t
 {

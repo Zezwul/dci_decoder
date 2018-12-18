@@ -7,7 +7,7 @@ int main(const int argc, const char* argv[])
 {
 	uint64_t inputArguments;
 	dciType dci_Result;
-	uint8_t dci_bandwidthPRB;
+	uint32_t dci_bandwidthPRB;
 	bandwidth_t dci_bandwidth;
 
 	dci_bandwidth = dci_defineDci(argc, argv, &dci_Result, &dci_bandwidthPRB);
@@ -19,13 +19,13 @@ int main(const int argc, const char* argv[])
 	{
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
         { FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, NDI, TPC, DMRS, CSIR, SRSR };
-        dci0_offsetArray [dci0_rivOutput] = dci_lengthOfRIVviaBandwidth;
+        dci0_offsetArray [dci0_rivOutput] = dci_lengthOfRIVviaBandwidth(dci_bandwidth);
 		break;
 	}
 	case dci1:
 	{
 	    uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-	    dci1_offsetArray[dci1_bitmap]  = dci1_lengthOfBitmapViaBandwidth;
+	    dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
 		break;
 	}
 	case dci60a:
