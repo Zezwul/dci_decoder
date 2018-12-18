@@ -101,9 +101,9 @@ enum dci60a_InputParameters {
 	dci60a_TPC60a,
 	dci60a_CSIreq60a,
 	dci60a_RSreq60a,
-	dci60a_PDCCH60a
-	dci60a_narrowbandIndex;
-	dci60a_rivLength;
+	dci60a_PDCCH60a,
+	dci60a_narrowbandIndex,
+	dci60a_rivLength,
 } dci60a_InputParameters;
 
 //enum dci60a_OutputParameters {
