@@ -82,8 +82,7 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	uint32_t val = (uint32_t)scanf("%lx", dci_readArgumentsStdin);
-	return val;
+	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
 }
 
 
