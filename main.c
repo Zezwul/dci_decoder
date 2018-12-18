@@ -25,7 +25,7 @@ int main(const int argc, const char* argv[])
 	case dci1:
 	{
 	    uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-	    dci1_offsetArray[dci1_bitmap]  =dci1_lengthOfBitmapViaBandwidth;
+	    dci1_offsetArray[dci1_bitmap]  = dci1_lengthOfBitmapViaBandwidth;
 		break;
 	}
 	case dci60a:
