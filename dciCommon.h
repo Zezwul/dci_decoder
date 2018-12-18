@@ -3,8 +3,8 @@
 
 #include <inttypes.h>
 
-#define RIV_LEN 13 //[riv len] bandwidth 20
-#define BITMAP_LEN 25 //[bitmap len] bandwidth 20
+#define RIV_LEN 13
+#define BITMAP_LEN 25
 
 /* Shared Length of parameters */
 #define FORMAT_FLAG 1
@@ -71,6 +71,38 @@ typedef enum dci1_OutputParameters
 	dci1_maxAmountOfArguments
 } dci1_OutputParameters;
 
+enum dci60a_InputParameters
+{
+	dci60a_narrowbandIndex,
+	dci60a_rivLength,
+	dci60a_MCS,
+	dci60a_PUSCH,
+	dci60a_HARQ,
+	dci60a_NDI,
+	dci60a_RV,
+	dci60a_TPC,
+	dci60a_CSIreq,
+	dci60a_RSreq,
+	dci60a_PDCCH,
+	dci60a_maxAmmountOfArguments
+} dci60a_InputParameters;
+
+enum dci60a_OutputParameters
+{
+	dci60a_FirstPRBoutput,
+	dci60a_LastPRBoutput,
+	dci60a_MCSoutput,
+	dci60a_PUSCHoutput,
+	dci60a_HARQoutput,
+	dci60a_NDIoutput,
+	dci60a_RVoutput,
+	dci60a_TPCoutput,
+	dci60a_CSIreqOutput,
+	dci60a_RSreqOutput,
+	dci60a_PDCCHOutput,
+	dci60a_maxAmountOfArgumentsOutput
+} dci60a_OutputParameters;
+
 typedef enum bandwidth_t
 {
     BW_1_4MHz,
@@ -90,38 +122,7 @@ typedef enum dciType
 	maxDci
 } dciType;
 
-enum dci60a_InputParameters {
-	dci60a_FirstPRB60a,
-	dci60a_LastPRB60a,
-	dci60a_MCS60a,
-	dci60a_PUSCH60a,
-	dci60a_HARQ60a,
-	dci60a_NDI60a,
-	dci60a_RV60a,
-	dci60a_TPC60a,
-	dci60a_CSIreq60a,
-	dci60a_RSreq60a,
-	dci60a_PDCCH60a,
-	dci60a_narrowbandIndex,
-	dci60a_rivLength,
-} dci60a_InputParameters;
-
-enum dci60a_OutputParameters {
-	dci60a_FirstPRB60aOutput,
-	dci60a_LastPRB60aOutput,
-	dci60a_MCS60aOutput,
-	dci60a_PUSCH60aOutput,
-	dci60a_HARQ60aOutput,
-	dci60a_NDI60aOutput,
-	dci60a_RV60aOutput,
-	dci60a_TPC60aOutput,
-	dci60a_CSIreq60aOutput,
-	dci60a_RSreq60aOutput,
-	dci60a_PDCCH60aOutput,
-} dci60a_OutputParametersOutput;
-
-
-uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
+uint32_t dci0_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
 void dci1_CorrectnessParameters(uint8_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
