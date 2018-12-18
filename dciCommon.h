@@ -3,6 +3,57 @@
 
 #include <inttypes.h>
 
+typedef enum dci0_InputParameters
+{
+	dci0_firstPRB,
+	dci0_lastPRB,
+	dci0_mcsindex,
+	dci0_newDataIndicator,
+	dci0_pucchTpcCommand,
+	dci0_dmrsCyclic,
+	dci0_csiRqst,
+	dci0_srsRqst,
+	dci0_maxAmountOfArguments
+} dci0_InputParameters;
+
+typedef enum dci0_OutputParameters
+{
+	dci0_formtFlagOutput,
+	dci0_hoppingFlagOutput,
+	dci0_rivOutput,
+	dci0_mcsindexOutput,
+	dci0_newDataIndicatorOutput,
+	dci0_pucchTpcCommandOutput,
+	dci0_dmrsCyclicOutput,
+	dci0_csiRqstOutput,
+	dci0_srsRqstOutput,
+	dci0_maxAmmountOfArgumentsOutput
+} dci0_OutputParameters;
+
+typedef enum dci1_InputParameters
+{
+	dci1_rbgNumber,
+	dci1_rbgIndex,
+	dci1_mcsindex,
+	dci1_harq,
+	dci1_newDataIndicator,
+	dci1_redundancyVersion,
+	dci1_pucchTpcCommand,
+	dci1_maxAmountOfArguments
+} dci1_InputParameters;
+
+typedef enum dci1_OutputParameters
+{
+	dci1_resourdeAllocationType,
+	dci1_bitmap,
+	dci1_mcsindexOutput,
+	dci1_harqOutput,
+	dci1_newDataIndicatorOutput,
+	dci1_redundancyVersionOutput,
+	dci1_pucchTpcCommandOutput,
+	dci1_maxAmmountOfArgumentsOutput
+} dci1_OutputParameters;
+
 /* 2 values, which will be changed */
 #define RIV_LEN 13 //[riv len] bandwidth 20
 #define BITMAP_LEN 25 //[bitmap len] bandwidth 20
