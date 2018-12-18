@@ -229,6 +229,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_PDCCH_parametr\n");
 	}
+
 }
 
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,

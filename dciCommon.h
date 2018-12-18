@@ -90,9 +90,36 @@ typedef enum dciType
 	maxDci
 } dciType;
 
-enum dci60a_Parameters { paramFirstPRB60a, paramLastPRB60a, paramMCS60a, paramPUSCH60a,
-						 paramHARQ60a, paramNDI60a, paramRV60a, paramTPC60a, paramCSIreq60a,
-						 paramSRSreq60a, paramPDCCH60a };
+enum dci60a_InputParameters {
+	dci60a_FirstPRB60a,
+	dci60a_LastPRB60a,
+	dci60a_MCS60a,
+	dci60a_PUSCH60a,
+	dci60a_HARQ60a,
+	dci60a_NDI60a,
+	dci60a_RV60a,
+	dci60a_TPC60a,
+	dci60a_CSIreq60a,
+	dci60a_RSreq60a,
+	dci60a_PDCCH60a
+	dci60a_narrowbandIndex;
+	dci60a_rivLength;
+} dci60a_InputParameters;
+
+//enum dci60a_OutputParameters {
+//	dci60a_FirstPRB60a,
+//	dci60a_LastPRB60a,
+//	dci60a_MCS60a,
+//	dci60a_PUSCH60a,
+//	dci60a_HARQ60a,
+//	dci60a_NDI60a,
+//	dci60a_RV60a,
+//	dci60a_TPC60a,
+//	dci60a_CSIreq60a,
+//	dci60a_RSreq60a,
+//	dci60a_PDCCH60a
+//} dci60a_OutputParameters;
+
 
 uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
