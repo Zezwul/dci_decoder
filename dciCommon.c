@@ -7,35 +7,6 @@
 #include <math.h>
 #include <string.h>
 
-#define RIV_LEN 13 //[riv len] bandwidth 20
-#define BITMAP_LEN 25 //[bitmap len] bandwidth 20
-
-/* Shared Length of parameters */
-#define FORMAT_FLAG 1
-#define HOPPING_FLAG 1
-#define RA 1
-#define RIV 13
-#define CSIR 1
-#define SRSR 1
-#define NDI 1
-#define TPC 2
-#define HARQ 3
-#define MCS 5
-#define RV 2
-
-/* dci0 Length of parameters */
-#define DMRS 3
-#define DCI0_NUMBER_PARAM 9
-
-/* dci1 Length of parameters */
-#define DCI1_NUMBER_PARAM 7
-
-/* dci60a Length of parameters */
-#define MCS60A 4
-#define PUSCH 2
-#define PDCCH 2
-#define DCI60A_NUMBER_PARAM 10
-
 /* Maximum values of parameters  */
 #define MAX_MCS 31
 #define MAX_MCS60A 15
@@ -52,14 +23,6 @@
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
-
-uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
-{ FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, NDI, TPC, DMRS, CSIR, SRSR };
-
-uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-
-uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
-        TPC, CSIR, SRSR, PDCCH };
 
 uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {

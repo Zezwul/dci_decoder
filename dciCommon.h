@@ -3,6 +3,35 @@
 
 #include <inttypes.h>
 
+#define RIV_LEN 13 //[riv len] bandwidth 20
+#define BITMAP_LEN 25 //[bitmap len] bandwidth 20
+
+/* Shared Length of parameters */
+#define FORMAT_FLAG 1
+#define HOPPING_FLAG 1
+#define RA 1
+#define RIV 13
+#define CSIR 1
+#define SRSR 1
+#define NDI 1
+#define TPC 2
+#define HARQ 3
+#define MCS 5
+#define RV 2
+
+/* dci0 Length of parameters */
+#define DMRS 3
+#define DCI0_NUMBER_PARAM 9
+
+/* dci1 Length of parameters */
+#define DCI1_NUMBER_PARAM 7
+
+/* dci60a Length of parameters */
+#define MCS60A 4
+#define PUSCH 2
+#define PDCCH 2
+#define DCI60A_NUMBER_PARAM 10
+
 typedef enum dci0_InputParameters
 {
 	dci0_firstPRB,
