@@ -175,19 +175,6 @@ void dci1_CorrectnessParameters(uint8_t* dciParam)
 
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
 {
-//	dci60a_FirstPRB60a,
-//	dci60a_LastPRB60a,
-//	dci60a_MCS60a,
-//	dci60a_PUSCH60a,
-//	dci60a_HARQ60a,
-//	dci60a_NDI60a,
-//	dci60a_RV60a,
-//	dci60a_TPC60a,
-//	dci60a_CSIreq60a,
-//	dci60a_RSreq60a,
-//	dci60a_PDCCH60a,
-//	dci60a_narrowbandIndex,
-//	dci60a_rivLength,
 
 	if (dciParam[dci60a_FirstPRB60a] >= dci60a_bandwidthPRB)
 	{

@@ -106,19 +106,19 @@ enum dci60a_InputParameters {
 	dci60a_rivLength,
 } dci60a_InputParameters;
 
-//enum dci60a_OutputParameters {
-//	dci60a_FirstPRB60a,
-//	dci60a_LastPRB60a,
-//	dci60a_MCS60a,
-//	dci60a_PUSCH60a,
-//	dci60a_HARQ60a,
-//	dci60a_NDI60a,
-//	dci60a_RV60a,
-//	dci60a_TPC60a,
-//	dci60a_CSIreq60a,
-//	dci60a_RSreq60a,
-//	dci60a_PDCCH60a
-//} dci60a_OutputParameters;
+enum dci60a_OutputParameters {
+	dci60a_FirstPRB60aOutput,
+	dci60a_LastPRB60aOutput,
+	dci60a_MCS60aOutput,
+	dci60a_PUSCH60aOutput,
+	dci60a_HARQ60aOutput,
+	dci60a_NDI60aOutput,
+	dci60a_RV60aOutput,
+	dci60a_TPC60aOutput,
+	dci60a_CSIreq60aOutput,
+	dci60a_RSreq60aOutput,
+	dci60a_PDCCH60aOutput,
+} dci60a_OutputParametersOutput;
 
 
 uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
