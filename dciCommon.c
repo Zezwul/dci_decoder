@@ -7,6 +7,48 @@
 #include <math.h>
 #include <string.h>
 
+#define RIV_LEN 13 //[riv len] bandwidth 20
+#define BITMAP_LEN 25 //[bitmap len] bandwidth 20
+
+/* Shared Length of parameters */
+#define FORMAT_FLAG 1
+#define HOPPING_FLAG 1
+#define RA 1
+#define RIV 13
+#define CSIR 1
+#define SRSR 1
+#define NDI 1
+#define TPC 2
+#define HARQ 3
+#define MCS 5
+#define RV 2
+
+/* dci0 Length of parameters */
+#define DMRS 3
+#define DCI0_NUMBER_PARAM 9
+
+/* dci1 Length of parameters */
+#define DCI1_NUMBER_PARAM 7
+
+/* dci60a Length of parameters */
+#define MCS60A 4
+#define PUSCH 2
+#define PDCCH 2
+#define DCI60A_NUMBER_PARAM 10
+
+/* Maximum values of parameters  */
+#define MAX_MCS 31
+#define MAX_MCS60A 15
+#define MAX_HARQ 7
+#define MAX_NDI 1
+#define MAX_RV 3
+#define MAX_TPC 3
+#define MAX_DMRS 7
+#define MAX_CSI_REQ 1
+#define MAX_SRS_REQ 1
+#define MAX_PUSCH 3
+#define MAX_PDCCH 3
+
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
@@ -23,7 +65,7 @@ uint32_t dci_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
     uint32_t LengthBitsRIV;
-	for (uint32_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
 		if (bandwidth == dciBandwidth[i])
 		{
@@ -39,7 +81,7 @@ uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
     uint32_t bitmapBitLenght;
-	for (uint8_t i = 0; i < AMOUNT_OF_BANDWIDTHS; ++i)
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; ++i)
 	{
 		if (bandwidth == dciBandwidth[i])
 		{
@@ -51,11 +93,12 @@ uint32_t dci1_lengthOfBitmapViaBandwidth(uint32_t bandwidth)
 	return 0;
 }
 
-void dci_defineDci(const int argc, const char* const argv[], dciType* restrict const dci_p,
+bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* restrict const dci_p,
 		uint32_t* restrict prb_p)
 {
     uint32_t dciBandwidthPRB[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 	dciType dciResult = dci0;
+	bandwidth_t dci_bandwidth = BW_20MHz;
 	uint32_t bandwidthPRB = 100;
 	if (argc > 2 && argc < 4)
 	{
@@ -72,12 +115,14 @@ void dci_defineDci(const int argc, const char* const argv[], dciType* restrict c
 			if ((uint32_t)atoi(argv[2]) == dciBandwidth[i])
 			{
 				bandwidthPRB = dciBandwidthPRB[i];
+				dci_bandwidth = i;
 				break;
 			}
 		}
 	}
 	*prb_p = bandwidthPRB;
 	*dci_p = dciResult;
+	return dci_bandwidth;
 }
 
 uint8_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
@@ -126,13 +171,13 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selecte
     {
         sizeOfArray = DCI0_NUMBER_PARAM;
     	bitLenghtOfDciParameter = initArray(dci0_offsetArray, sizeOfArray);
-        bitLenghtOfDciParameter[2] = dci_lengthOfRIVviaBandwidth(bandwidth);
+        bitLenghtOfDciParameter[dci0_rivOutput] = dci_lengthOfRIVviaBandwidth(bandwidth);
     }
     else if ( selectedDci == dci1)
     {
     	sizeOfArray = DCI1_NUMBER_PARAM;
     	bitLenghtOfDciParameter = initArray(dci1_offsetArray, sizeOfArray);
-        bitLenghtOfDciParameter[1] = dci1_lengthOfBitmapViaBandwidth(bandwidth);
+        bitLenghtOfDciParameter[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(bandwidth);
     }
     else if ( selectedDci == dci60a)
     {
@@ -158,42 +203,42 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, dciType selecte
 
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
 {
-	if (dciParam[paramFirstPRB0] >= dci0_bandwidthPRB)
+	if (dciParam[dci0_firstPRB] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
 	}
 
-	if (dciParam[paramFirstPRB0] > dciParam[paramLastPRB0] || dciParam[paramFirstPRB0] >= dci0_bandwidthPRB)
+	if (dciParam[dci0_firstPRB] > dciParam[dci0_lastPRB] || dciParam[dci0_lastPRB] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
 	}
 
-	if (dciParam[paramMCS0] > MAX_MCS)
+	if (dciParam[dci0_mcsindex] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_MCS_parametr\n");
 	}
 
-	if (dciParam[paramNDI0] > MAX_NDI)
+	if (dciParam[dci0_newDataIndicator] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 	}
 
-	if (dciParam[paramTPC0] > MAX_TPC)
+	if (dciParam[dci0_pucchTpcCommand] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_TPC_parametr\n");
 	}
 
-	if (dciParam[paramDMRS0] > MAX_DMRS)
+	if (dciParam[dci0_dmrsCyclic] > MAX_DMRS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_DMRS_parametr\n");
 	}
 
-	if (dciParam[paramCSIreq0] > MAX_CSI_REQ)
+	if (dciParam[dci0_csiRqst] > MAX_CSI_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
 	}
 
-	if (dciParam[paramSRSreq0] > MAX_SRS_REQ)
+	if (dciParam[dci0_srsRqst] > MAX_SRS_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
 	}
@@ -201,27 +246,27 @@ void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthP
 
 void dci1_CorrectnessParameters(uint8_t* dciParam)
 {
-	if (dciParam[paramMCS1] > MAX_MCS)
+	if (dciParam[dci1_mcsindex] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_MCS_parametr\n");
 	}
 
-	if (dciParam[paramHARQ1] > MAX_HARQ)
+	if (dciParam[dci1_harq] > MAX_HARQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_HARQ_parametr\n");
 	}
 
-	if (dciParam[paramNDI1] > MAX_NDI)
+	if (dciParam[dci1_newDataIndicator] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_NDI_parametr\n");
 	}
 
-	if (dciParam[paramRV1] > MAX_RV)
+	if (dciParam[dci1_redundancyVersion] > MAX_RV)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_RV_parametr\n");
 	}
 
-	if (dciParam[paramTPC1] > MAX_TPC)
+	if (dciParam[dci1_pucchTpcCommand] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_TPC_parametr\n");
 	}
