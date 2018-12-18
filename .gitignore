@@ -6,3 +6,5 @@ dataLib.c
 *.out
 *.orig
 *.*.orig
+.autotools
+
