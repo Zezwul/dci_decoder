@@ -237,7 +237,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 			for (size_t j = 0; j < dci60a_lenghtOfFirstPrbsArrays[i]; j++ )
 			{
 				if (!(dci60a_avaibleFirstPrbs[i][j] == dciParam[paramFirstPRB60a] &&
-						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBs - 1 == dciParam[paramLastPRB60a]))
+						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS - 1 == dciParam[paramLastPRB60a]))
 				{
 					fprintf (stdout, "ERR_OCC_FirstPRB_or_LastPRB_is_not_avaible_for_CAT-M_cells\n");
 					errorCounter++;
