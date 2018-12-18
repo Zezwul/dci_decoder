@@ -19,12 +19,21 @@
 #define MAX_SRS_REQ 1
 #define MAX_PUSCH 3
 #define MAX_PDCCH 3
+#define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
 
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
-uint32_t dci0_lengthOfRIVviaBandwidth(bandwidth_t bandwidth)
+static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
+
+static const uint32_t dci60a_avaibleFirstPrbs[6][16] = {{0}, {1, 8}, {0, 5, 13, 19},
+		{1, 7, 13, 19, 25, 31, 37, 43}, {1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68},
+		{2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92}};
+
+static const uint32_t dci60a_lenghtOfFirstPrbsArrays[] = {1, 2, 4, 8, 12, 16};
+
+uint32_t dci0_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
     return possibleLengthBitsOfRIV[bandwidth];
@@ -70,7 +79,7 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
+	return (uint32_t)scanf("%llx", dci_readArgumentsStdin);
 }
 
 
@@ -104,130 +113,176 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, 
 
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
 {
+	uint32_t errorCounter = 0;
+
 	if (dciParam[dci0_firstPRBOutput] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_firstPRBOutput] > dciParam[dci0_lastPRBOutput] || dciParam[dci0_lastPRBOutput] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_mcsindexOutput] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_MCS_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_newDataIndicatorOutput] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_pucchTpcCommandOutput] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_TPC_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_dmrsCyclicOutput] > MAX_DMRS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_DMRS_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_csiRqstOutput] > MAX_CSI_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci0_srsRqstOutput] > MAX_SRS_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
+		errorCounter++;
+	}
+
+	if (errorCounter > 0)
+	{
+		exit(1);
 	}
 }
 
 void dci1_CorrectnessParameters(uint8_t* dciParam)
 {
+	uint32_t errorCounter = 0;
 	if (dciParam[dci1_mcsindex] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_MCS_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci1_harq] > MAX_HARQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_HARQ_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci1_newDataIndicator] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_NDI_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci1_redundancyVersion] > MAX_RV)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_RV_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci1_pucchTpcCommand] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_TPC_parametr\n");
+		errorCounter++;
+	}
+
+	if (errorCounter > 0)
+	{
+		exit(1);
 	}
 }
 
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
 {
-	if (dciParam[dci60a_FirstPRBoutput] >= dci60a_bandwidthPRB)
+	uint32_t errorCounter = 0;
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; i++)
 	{
-		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
+		if (dci60a_bandwidthPRB == dciBandwidthToPrb[i])
+		{
+			for (size_t j = 0; j < dci60a_lenghtOfFirstPrbsArrays[i]; j++ )
+			{
+				if (!(dci60a_avaibleFirstPrbs[i][j] == dciParam[dci0_firstPRBOutput] &&
+						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS - 1 == dciParam[dci0_lastPRBOutput]))
+				{
+					fprintf (stdout, "ERR_OCC_FirstPRB_or_LastPRB_is_not_avaible_for_CAT-M_cells\n");
+					errorCounter++;
+				}
+			}
+		}
 	}
-
-	if (dciParam[dci60a_FirstPRBoutput] > dciParam[dci60a_LastPRBoutput] || dciParam[dci60a_LastPRBoutput] >= dci60a_bandwidthPRB)
-	{
-		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
-	}
-
 	if (dciParam[dci60a_MCSoutput] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_MCS_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_PUSCHoutput] > MAX_PUSCH)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_PUSCH_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_HARQoutput] > MAX_HARQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_HARQ_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_NDIoutput] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
+		errorCounter++;
 	}
 	
 	if (dciParam[dci60a_RVoutput] > MAX_RV)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_RV_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_TPCoutput] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_TPC_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_CSIreqOutput] > MAX_CSI_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_RSreqOutput] > MAX_SRS_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
+		errorCounter++;
 	}
 
 	if (dciParam[dci60a_PDCCHOutput] > MAX_PDCCH)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_PDCCH_parametr\n");
+		errorCounter++;
+	}
+
+	if (errorCounter > 0)
+	{
+		exit(1);
 	}
 }
 
