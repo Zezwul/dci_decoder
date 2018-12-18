@@ -126,7 +126,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
  *
 **********************************************************************************************************/
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray, dciType selectedDci);
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray);
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use

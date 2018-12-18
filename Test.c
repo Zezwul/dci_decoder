@@ -73,9 +73,8 @@ Test(TestArguments, dci_ValidNegativeArguments)
 Test(libTest,dci_readValueFromDCITest)
 {
 	uint64_t dci = 0x1210000DBA;
-	uint8_t bandwidth = 10;
-	dciType selectedDci = 1;
-	uint32_t* output = dci_readValueFromDCI (dci, bandwidth, selectedDci);
+	uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray, DCI1_NUMBER_PARAM);
 
 	cr_assert(output[0] == 2, "Expected %d, got %d", 2, output[0]);
 	cr_assert(output[1] == 2, "Expected %d, got %d", 2, output[1]);
@@ -103,7 +102,6 @@ Test(libTest,dci1_bitmapDecoderTest)
 
 Test(RivTest, dci_rivPositiveValues)
 {
-	dci_readValueFromDCI(888, 10, 1);
 	uint32_t outFirstPRB;
 	uint32_t outLastPRB;
 	uint32_t bandwidthPRB[] = {6, 15, 25, 50, 75, 100};

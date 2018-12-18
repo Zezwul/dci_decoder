@@ -111,7 +111,7 @@ static uint64_t createMask(const uint32_t n)
 	return mask;
 }
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t bandwidth, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray, dciType selectedDci)
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray)
 {
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	for (uint8_t i = 0; i < sizeOfArray; i++)
