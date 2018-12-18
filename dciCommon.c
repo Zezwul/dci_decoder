@@ -27,7 +27,7 @@ uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 uint32_t dci_lengthOfRIVviaBandwidth(bandwidth_t bandwidth)
 {
     uint32_t possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS] = {5, 7, 9, 11, 12 ,13};
-    return possibleLengthBitsOfRIV[AMOUNT_OF_BANDWIDTHS];
+    return possibleLengthBitsOfRIV[bandwidth];
 }
 
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
