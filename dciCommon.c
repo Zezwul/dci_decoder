@@ -205,6 +205,11 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 	}
+	
+	if (dciParam[dci60a_RV60aOutput] > MAX_RV)
+	{
+		fprintf(stdout, "ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
+	}
 
 	if (dciParam[dci60a_TPC60aOutput] > MAX_TPC)
 	{
