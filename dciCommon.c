@@ -104,42 +104,42 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, 
 
 void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
 {
-	if (dciParam[dci0_firstPRB] >= dci0_bandwidthPRB)
+	if (dciParam[dci0_firstPRBOutput] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Value_of_FirstPRB_is_too_big\n");
 	}
 
-	if (dciParam[dci0_firstPRB] > dciParam[dci0_lastPRB] || dciParam[dci0_lastPRB] >= dci0_bandwidthPRB)
+	if (dciParam[dci0_firstPRBOutput] > dciParam[dci0_lastPRBOutput] || dciParam[dci0_lastPRBOutput] >= dci0_bandwidthPRB)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_PRB\n");
 	}
 
-	if (dciParam[dci0_mcsindex] > MAX_MCS)
+	if (dciParam[dci0_mcsindexOutput] > MAX_MCS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value_of_MCS_parametr\n");
 	}
 
-	if (dciParam[dci0_newDataIndicator] > MAX_NDI)
+	if (dciParam[dci0_newDataIndicatorOutput] > MAX_NDI)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 	}
 
-	if (dciParam[dci0_pucchTpcCommand] > MAX_TPC)
+	if (dciParam[dci0_pucchTpcCommandOutput] > MAX_TPC)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_TPC_parametr\n");
 	}
 
-	if (dciParam[dci0_dmrsCyclic] > MAX_DMRS)
+	if (dciParam[dci0_dmrsCyclicOutput] > MAX_DMRS)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_DMRS_parametr\n");
 	}
 
-	if (dciParam[dci0_csiRqst] > MAX_CSI_REQ)
+	if (dciParam[dci0_csiRqstOutput] > MAX_CSI_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
 	}
 
-	if (dciParam[dci0_srsRqst] > MAX_SRS_REQ)
+	if (dciParam[dci0_srsRqstOutput] > MAX_SRS_REQ)
 	{
 		fprintf(stdout, "ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
 	}
