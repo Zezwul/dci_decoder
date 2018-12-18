@@ -19,13 +19,13 @@ int main(const int argc, const char* argv[])
 	{
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
         { FORMAT_FLAG, HOPPING_FLAG, RIV, MCS, NDI, TPC, DMRS, CSIR, SRSR };
-
+        dci0_offsetArray [dci0_rivOutput] = dci_lengthOfRIVviaBandwidth;
 		break;
 	}
 	case dci1:
 	{
 	    uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-
+	    dci1_offsetArray[dci1_bitmap]  =dci1_lengthOfBitmapViaBandwidth;
 		break;
 	}
 	case dci60a:
