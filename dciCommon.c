@@ -19,7 +19,7 @@
 #define MAX_SRS_REQ 1
 #define MAX_PUSCH 3
 #define MAX_PDCCH 3
-#define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBs
+#define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBs 6
 
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
