@@ -131,7 +131,7 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght);
 bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* restrict const dci_p,
 		uint32_t* restrict prb_p);
 
-uint8_t dci_readStdin(uint64_t* dci_readArgumentsStdin);
+uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
         uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
