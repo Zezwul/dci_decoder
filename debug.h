@@ -9,7 +9,7 @@
 #ifdef DEBUG
 #define DEBUG_PRINT(msg)\
 do{   \
-    (void)fprintf(stdout, "%s\t Error in line:%d, in file:%s\n", msg, __LINE__, __FILENAME__);   \
+    (void)fprintf(stdout, "%s\t Error in line: %d, in file: %s\n", msg, __LINE__, __FILENAME__);   \
 }while(0)
 #else
 #define DEBUG_PRINT(msg)
