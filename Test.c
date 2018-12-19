@@ -72,8 +72,7 @@ Test(TestArguments, dci_ValidNegativeArguments)
 
 Test(libTest,dci_readValueFromDCITest)
 {
-	uint64_t dci = 0x1210000DBA;
-	dci <<= 1;
+	uint64_t dci = 0x2420001B74;
 	uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
 	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray,
 	        DCI1_NUMBER_PARAM, dci1_calculateShiftOrigin(dci1_offsetArray));
@@ -119,5 +118,19 @@ Test(RivTest, dci_rivPositiveValues)
 				cr_expect_eq(outLastPRB, endIdx,"Error");
 			}
 		}
+	}
+}
+
+Test(dci1Test, dci1_calculateShiftOriginTest)
+{
+	uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+	uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
+	uint32_t correctValues[AMOUNT_OF_BANDWIDTHS] = {24, 24, 32, 32, 40, 40};
+	uint32_t testVal;
+	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; i++)
+	{
+		dci1_offsetArray[dci1_bitmap] = possibleLengthBitsRBG[i];
+		testVal = dci1_calculateShiftOrigin(dci1_offsetArray);
+		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin [%d] test loop test arre incorrct", i);
 	}
 }
