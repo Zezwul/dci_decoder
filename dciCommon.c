@@ -22,6 +22,28 @@
 #define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
 #define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
+#define MOD_8_MASK 0x7
+
+#define MOD_8_MASK 0x7
+
+uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
+{
+    uint32_t numberOfSignificantBits = 0;
+    for(dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+    {
+        numberOfSignificantBits += shiftArray[i];
+    }
+
+    uint32_t temp = numberOfSignificantBits;
+    temp /= CHAR_BIT;
+    if (numberOfSignificantBits & MOD_8_MASK)
+    {
+        temp++;
+    }
+
+    return temp * CHAR_BIT - 1;
+}
+
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
@@ -81,34 +103,31 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%llx", dci_readArgumentsStdin);
+	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
 }
-
 
 void dci_print(char* output /*?*/)
 {
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t createMask(const uint32_t n)
+static uint32_t getBits(uint64_t dciToRead, uint32_t startRead, uint32_t shift)
 {
-	uint64_t mask = 1;
-	if (n == 0)
-	{
-		return 0;
-	}
-	mask <<= n;
-	mask -= 1;
-	return mask;
+    uint64_t shiftedDci = (dciToRead >> (startRead + 1 - shift));
+    uint64_t mask = (uint64_t)(~((uint)~0 << shift));
+    uint64_t bits = shiftedDci & mask;
+
+    return (uint32_t)bits;
 }
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray)
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
+        uint32_t sizeOfArray, uint32_t startingPoint)
 {
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
-		outputArray[i] = (uint32_t)(dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]));
-		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1];
+		outputArray[i] = getBits(dci, startingPoint, bitLenghtOfDciParameter[i]);
+		startingPoint -= bitLenghtOfDciParameter[i];
 	}
 	return outputArray;
 }
