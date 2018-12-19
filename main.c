@@ -20,8 +20,33 @@ int main(const int argc, const char* argv[])
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
         { FORMAT_FLAG, HOPPING_FLAG, RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
         dci0_offsetArray [dci0_rivOutput] = dci0_lengthOfRIVviaBandwidth(dci_bandwidth);
+
         const uint32_t dci0_shiftOrigin = 31;
 
+        uint32_t* redValueFromDcidci = malloc(sizeof(uint32_t) * dci0_maxAmmountOfArguments);
+        redValueFromDcidci = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
+                        DCI0_NUMBER_PARAM, dci0_shiftOrigin);
+        uint32_t* outputArray = malloc(sizeof(uint32_t) * dci0_maxAmountOfArgumentsOutput);
+        dci_rivDecode(dci_bandwidthPRB, redValueFromDcidci[dci0_rivOutput],
+                &outputArray[dci0_firstPRBOutput], &outputArray[dci0_lastPRBOutput]);
+
+        dci0_OutputParameters outputElementIndex = dci0_mcsindexOutput;
+        dci0_InputParameters inputElementIndex = dci0_mcsindex;
+        for ( ; outputElementIndex < dci0_maxAmountOfArgumentsOutput;
+                outputElementIndex++, inputElementIndex++)
+        {
+            outputArray[outputElementIndex] = redValueFromDcidci[inputElementIndex];
+        }
+
+        for (dci0_OutputParameters i = dci0_firstPRBOutput;
+                i < dci0_maxAmountOfArgumentsOutput; ++i)
+        {
+            fprintf(stdout, "%u ", outputArray[i]);
+        }
+        fprintf(stdout, "\n");
+
+        free(redValueFromDcidci);
+        free(outputArray);
 		break;
 	}
 	case dci1:
