@@ -22,21 +22,24 @@
 #define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
 #define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
+#define MOD_8_MASK 0x7
+
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
-    uint32_t counter = 0;
+    uint32_t numberOfSignificantBits = 0;
     for(dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
     {
-        counter += shiftArray[i];
+        numberOfSignificantBits += shiftArray[i];
     }
 
-    counter /= CHAR_BIT;
-    if (counter % CHAR_BIT > 0)
+    uint32_t temp = numberOfSignificantBits;
+    temp /= CHAR_BIT;
+    if (numberOfSignificantBits & MOD_8_MASK)
     {
-        counter++;
+        temp++;
     }
 
-    return counter * CHAR_BIT - 1;
+    return temp * CHAR_BIT - 1;
 }
 
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
