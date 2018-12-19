@@ -347,3 +347,8 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
 	outputRBGIndex[0] = j;
 	return outputRBGIndex;
 }
+
+uint64_t getBits(uint64_t dci, uint64_t startRead, uint64_t shift)
+{
+    return (dci >> (startRead + 1 - shift)) & ~(~0 << shift);
+}
