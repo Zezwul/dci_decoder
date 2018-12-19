@@ -22,6 +22,23 @@
 #define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
 #define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
+uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
+{
+    uint32_t counter = 0;
+    for(dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+    {
+        counter += shiftArray[i];
+    }
+
+    counter /= CHAR_BIT;
+    if (counter % CHAR_BIT > 0)
+    {
+        counter++;
+    }
+
+    return counter * CHAR_BIT - 1;
+}
+
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
@@ -89,25 +106,23 @@ void dci_print(char* output /*?*/)
 	fprintf(stdout, "%s", output);
 }
 
-static uint64_t createMask(const uint32_t n)
+static uint32_t getBits(uint64_t dciToRead, uint32_t startRead, uint32_t shift)
 {
-	uint64_t mask = 1;
-	if (n == 0)
-	{
-		return 0;
-	}
-	mask <<= n;
-	mask -= 1;
-	return mask;
+    uint64_t shiftedDci = (dciToRead >> (startRead + 1 - shift));
+    uint64_t mask = (uint64_t)(~((uint)~0 << shift));
+    uint64_t bits = shiftedDci & mask;
+
+    return (uint32_t)bits;
 }
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray)
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
+        uint32_t sizeOfArray, uint32_t startingPoint)
 {
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	for (uint8_t i = 0; i < sizeOfArray; i++)
 	{
-		outputArray[i] = (uint32_t)(dci & createMask(bitLenghtOfDciParameter[sizeOfArray - i - 1]));
-		dci >>= bitLenghtOfDciParameter[sizeOfArray - i - 1];
+		outputArray[i] = getBits(dci, startingPoint, bitLenghtOfDciParameter[i]);
+		startingPoint -= bitLenghtOfDciParameter[i];
 	}
 	return outputArray;
 }
@@ -328,9 +343,4 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
 	}
 	outputRBGIndex[0] = j;
 	return outputRBGIndex;
-}
-
-uint64_t getBits(uint64_t dci, uint64_t startRead, uint64_t shift)
-{
-    return (dci >> (startRead + 1 - shift)) & ~(~0 << shift);
 }

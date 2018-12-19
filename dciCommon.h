@@ -141,7 +141,8 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
  *
 **********************************************************************************************************/
 
-uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter, uint32_t sizeOfArray);
+uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
+        uint32_t sizeOfArray, uint32_t startingPoint);
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use
@@ -190,8 +191,7 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
         uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
 
-uint64_t getBits(uint64_t dci, uint64_t startRead, uint64_t shift);
-
 void dci_print(char* output);
+uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray);
 
 #endif /*DCI_COMMON_H_*/
