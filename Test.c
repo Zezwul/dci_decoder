@@ -73,12 +73,14 @@ Test(TestArguments, dci_ValidNegativeArguments)
 Test(libTest,dci_readValueFromDCITest)
 {
 	uint64_t dci = 0x1210000DBA;
+	dci <<= 1;
 	uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray, DCI1_NUMBER_PARAM);
+	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray,
+	        DCI1_NUMBER_PARAM, dci1_calculateShiftOrigin(dci1_offsetArray));
 
-	cr_assert(output[0] == 2, "Expected %d, got %d", 2, output[0]);
-	cr_assert(output[1] == 2, "Expected %d, got %d", 2, output[1]);
-	cr_assert(output[2] == 1, "Expected %d, got %d", 1, output[2]);
+	cr_assert(output[0] == 0, "Expected %d, got %d", 2, output[0]);
+	cr_assert(output[1] == 9469952, "Expected %d, got %d", 2, output[1]);
+	cr_assert(output[2] == 13, "Expected %d, got %d", 1, output[2]);
 	cr_assert(output[3] == 5, "Expected %d, got %d", 5, output[3]);
 	free(output);
 }
