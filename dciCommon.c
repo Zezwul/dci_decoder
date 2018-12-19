@@ -20,6 +20,7 @@
 #define MAX_PUSCH 3
 #define MAX_PDCCH 3
 #define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
+#define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
@@ -27,7 +28,8 @@ uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
 static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 
-static const uint32_t dci60a_avaibleFirstPrbs[6][16] = {{0}, {1, 8}, {0, 5, 13, 19},
+static const uint32_t dci60a_avaibleFirstPrbs[AMOUNT_OF_BANDWIDTHS][MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS] = {
+		{0}, {1, 8}, {0, 5, 13, 19},
 		{1, 7, 13, 19, 25, 31, 37, 43}, {1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68},
 		{2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92}};
 
