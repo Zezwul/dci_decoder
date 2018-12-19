@@ -78,6 +78,7 @@ Test(libTest,dci_readValueFromDCITest)
 	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray,
 	        DCI1_NUMBER_PARAM, dci1_calculateShiftOrigin(dci1_offsetArray));
 
+
 	cr_assert(output[0] == 0, "Expected %d, got %d", 2, output[0]);
 	cr_assert(output[1] == 9469952, "Expected %d, got %d", 2, output[1]);
 	cr_assert(output[2] == 13, "Expected %d, got %d", 1, output[2]);

@@ -101,7 +101,7 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%llx", dci_readArgumentsStdin);
+	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
 }
 
 void dci_print(char* output /*?*/)
@@ -346,9 +346,4 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
 	}
 	outputRBGIndex[0] = j;
 	return outputRBGIndex;
-}
-
-uint64_t getBits(uint64_t dci, uint64_t startRead, uint64_t shift)
-{
-    return (dci >> (startRead + 1 - shift)) & ~(~0 << shift);
 }
