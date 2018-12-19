@@ -51,9 +51,29 @@ int main(const int argc, const char* argv[])
 	}
 	case dci1:
 	{
-	    uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-	    dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
-	    uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
+		uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+		dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
+		uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
+
+		uint32_t* redValueFromDci1 = dci_readValueFromDCI(inputArguments, dci1_offsetArray,
+				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
+
+		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(redValueFromDci1[dci1_bitmap], dci1_offsetArray[dci1_bitmap]);
+
+		for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+		{
+			outputRBGIndex[dci1_bitmap] = redValueFromDci1[BITMAP_LEN];
+
+			if (i == dci1_bitmap)
+			{
+				fprintf(stdout, "%u ", outputRBGIndex[dci1_bitmap]);
+			}
+
+			fprintf(stdout, "%u ", outputRBGIndex[i]);
+
+		}
+		fprintf(stdout,"\n");
+
 		break;
 	}
 	case dci60a:
