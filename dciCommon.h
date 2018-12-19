@@ -9,7 +9,6 @@
 /* Shared Length of parameters */
 #define FORMAT_FLAG 1
 #define HOPPING_FLAG 1
-#define RA 1
 #define RIV 13
 #define CSIR 1
 #define SRSR 1
@@ -21,6 +20,7 @@
 
 /* dci0 Length of parameters */
 #define DMRS 3
+#define RA 1
 #define DCI0_NUMBER_PARAM 9
 
 /* dci1 Length of parameters */
@@ -189,6 +189,8 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
         uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
+
+uint64_t getBits(uint64_t dci, uint64_t startRead, uint64_t shift);
 
 void dci_print(char* output);
 
