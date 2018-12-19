@@ -176,6 +176,17 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 
+/* > Function: dci_rivDecode
+**********************************************************************************************************
+ * @brief   Based on the given riv, decodes the values of the first and last PRBs.
+ *
+ * @param[in]   bandwidthPRB:             the number of allocated PRB depending on the bandwidth specified by the user
+ * @param[in]   riv:                      resource indicator value depending on the first and last PRB
+ * @param[out]   outFirstPRB:              pointer return first PRB calculated from riv
+ * @param[out]   outLastPRB:               pointer return last PRB calculated from riv
+ *
+**********************************************************************************************************/
+
 uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
         uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
 
