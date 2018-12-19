@@ -24,6 +24,8 @@
 
 #define MOD_8_MASK 0x7
 
+#define MOD_8_MASK 0x7
+
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
     uint32_t numberOfSignificantBits = 0;
