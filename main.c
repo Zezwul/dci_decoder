@@ -20,26 +20,26 @@ int main(const int argc, const char* argv[])
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
         { FORMAT_FLAG, HOPPING_FLAG, RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
         dci0_offsetArray [dci0_rivOutput] = dci0_lengthOfRIVviaBandwidth(dci_bandwidth);
-        const uint32_t dci0_shift_origin = 31;
+        const uint32_t dci0_shiftOrigin = 31;
+
 		break;
 	}
 	case dci1:
 	{
 	    uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
 	    dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
-	    uint32_t dci1_shift_origin = dci1_calculateShiftOrigin(dci1_offsetArray);
+	    uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
 		break;
 	}
 	case dci60a:
 	{
 	    uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
 	            TPC, CSIR, SRSR, PDCCH };
-        const uint32_t dci60a_shift_origin = 31;
-
+      const uint32_t dci60a_shiftOrigin = 31;
 		break;
 	}
 	default:
 		break;
 	}
-
+return 0;
 }
