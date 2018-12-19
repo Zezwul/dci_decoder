@@ -3,7 +3,7 @@ build: Test.c
 	gcc main.c dciCommon.c -O2 -o decoder.out $(CFLAGS)
 	gcc Test.c dciCommon.c -O2 -o test.out  $(CFLAGS)
 test: build
-	./decoder.out
+	echo "FFFF" | ./decoder.out dci1 20
 	./test.out
 clean:
 	rm -f *.out *o dci test.out

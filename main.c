@@ -19,7 +19,7 @@ int main(const int argc, const char* argv[])
 	{
         uint32_t dci0_offsetArray[DCI0_NUMBER_PARAM] =
         { FORMAT_FLAG, HOPPING_FLAG, RIV_LEN, MCS, NDI, TPC, DMRS, CSIR, SRSR };
-        dci0_offsetArray [dci0_rivOutput] = dci_lengthOfRIVviaBandwidth(dci_bandwidth);
+        dci0_offsetArray [dci0_rivOutput] = dci0_lengthOfRIVviaBandwidth(dci_bandwidth);
 		break;
 	}
 	case dci1:
@@ -32,11 +32,10 @@ int main(const int argc, const char* argv[])
 	{
 	    uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
 	            TPC, CSIR, SRSR, PDCCH };
-
 		break;
 	}
 	default:
 		break;
 	}
-
+return 0;
 }
