@@ -70,7 +70,7 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
+	return (uint32_t)scanf("%llx", dci_readArgumentsStdin);
 }
 
 
