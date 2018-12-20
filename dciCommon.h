@@ -82,7 +82,7 @@ enum dci60a_InputParameters
 	dci60a_RV,
 	dci60a_TPC,
 	dci60a_CSIreq,
-	dci60a_RSreq,
+	dci60a_SRSreq,
 	dci60a_PDCCH,
 	dci60a_maxAmmountOfArguments
 } dci60a_InputParameters;
@@ -98,7 +98,7 @@ enum dci60a_OutputParameters
 	dci60a_RVoutput,
 	dci60a_TPCoutput,
 	dci60a_CSIreqOutput,
-	dci60a_RSreqOutput,
+	dci60a_SRSreqOutput,
 	dci60a_PDCCHOutput,
 	dci60a_maxAmountOfArgumentsOutput
 } dci60a_OutputParameters;
