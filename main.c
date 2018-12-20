@@ -44,9 +44,6 @@ int main(const int argc, const char* argv[])
             fprintf(stdout, "%u ", outputArray[i]);
         }
         fprintf(stdout, "\n");
-
-        free(redValueFromDcidci);
-        free(outputArray);
 		break;
 	}
 	case dci1:
@@ -60,23 +57,7 @@ int main(const int argc, const char* argv[])
 
 		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(redValueFromDci1[dci1_bitmap], dci1_offsetArray[dci1_bitmap]);
 
-		for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
-		{
-			if (i == dci1_bitmap)
-			{
-				fprintf(stdout, "%u ", outputRBGIndex[0]);
-
-				for (uint32_t bitmapIndex = 1; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
-				{
-				fprintf(stdout, "%u ", outputRBGIndex[outputRBGIndex[0] + 1 -bitmapIndex]);
-				}
-			}
-			else
-			fprintf(stdout, "%u ", redValueFromDci1[i]);
-		}
-		fprintf(stdout,"\n");
-		free(redValueFromDci1);
-		free(outputRBGIndex);
+		dci1_printResults(redValueFromDci1, outputRBGIndex);
 		break;
 	}
 	case dci60a:

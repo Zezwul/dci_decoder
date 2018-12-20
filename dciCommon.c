@@ -44,6 +44,35 @@ uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
     return temp * CHAR_BIT - 1;
 }
 
+static void clearPointers(uint32_t* pointerToClear, uint32_t* pointerToClearTwo)
+{
+	free(pointerToClear);
+	free(pointerToClearTwo);
+	pointerToClear = NULL;
+	pointerToClearTwo = NULL;
+}
+
+void dci1_printResults(uint32_t* redValueFromDci1, uint32_t* outputRBGIndex)
+{
+	for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+	{
+		if (i == dci1_bitmap)
+		{
+			fprintf(stdout, "%u ", outputRBGIndex[0]);
+
+			for (uint32_t bitmapIndex = 1; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
+			{
+			fprintf(stdout, "%u ", outputRBGIndex[outputRBGIndex[0] + 1 -bitmapIndex]);
+			}
+		}
+		else
+		fprintf(stdout, "%u ", redValueFromDci1[i]);
+	}
+	fprintf(stdout,"\n");
+	clearPointers(redValueFromDci1, outputRBGIndex);
+}
+
+
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
