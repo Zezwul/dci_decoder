@@ -127,7 +127,7 @@ void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthP
 void dci1_CorrectnessParameters(uint8_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
-
+void dci1_printResults(uint32_t* redValueFromDci1, uint32_t* outputRBGIndex);
 
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
