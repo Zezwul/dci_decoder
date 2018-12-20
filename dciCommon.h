@@ -205,6 +205,7 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 **********************************************************************************************************
  * @brief   Based on the given riv, decodes the values of the first and last PRBs.
  *
+ * @param[in]   dciType:                  type of dci - used to distinguish the algorithm decoding the riv
  * @param[in]   bandwidthPRB:             the number of allocated PRB depending on the bandwidth specified by the user
  * @param[in]   riv:                      resource indicator value depending on the first and last PRB
  * @param[out]   outFirstPRB:              pointer return first PRB calculated from riv
