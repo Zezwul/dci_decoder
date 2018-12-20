@@ -77,9 +77,9 @@ Test(libTest,dci_readValueFromDCITest)
 	uint32_t* output = dci_readValueFromDCI (dci, dci1_offsetArray,
 	        DCI1_NUMBER_PARAM, dci1_calculateShiftOrigin(dci1_offsetArray));
 
-	cr_assert(output[0] == 0, "Expected %d, got %d", 2, output[0]);
-	cr_assert(output[1] == 9469952, "Expected %d, got %d", 2, output[1]);
-	cr_assert(output[2] == 13, "Expected %d, got %d", 1, output[2]);
+	cr_assert(output[0] == 0, "Expected %d, got %d", 0, output[0]);
+	cr_assert(output[1] == 9469952, "Expected %d, got %d", 9469952, output[1]);
+	cr_assert(output[2] == 13, "Expected %d, got %d", 13, output[2]);
 	cr_assert(output[3] == 5, "Expected %d, got %d", 5, output[3]);
 	free(output);
 }
@@ -131,6 +131,6 @@ Test(dci1Test, dci1_calculateShiftOriginTest)
 	{
 		dci1_offsetArray[dci1_bitmap] = possibleLengthBitsRBG[i];
 		testVal = dci1_calculateShiftOrigin(dci1_offsetArray);
-		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin [%d] test loop test arre incorrct", i);
+		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin [%d] test loop are incorrect", i);
 	}
 }
