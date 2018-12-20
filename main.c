@@ -62,18 +62,21 @@ int main(const int argc, const char* argv[])
 
 		for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
 		{
-			outputRBGIndex[dci1_bitmap] = redValueFromDci1[BITMAP_LEN];
-
 			if (i == dci1_bitmap)
 			{
-				fprintf(stdout, "%u ", outputRBGIndex[dci1_bitmap]);
+				fprintf(stdout, "%u ", outputRBGIndex[0]);
+
+				for (uint32_t bitmapIndex = 1; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
+				{
+				fprintf(stdout, "%u ", outputRBGIndex[outputRBGIndex[0] + 1 -bitmapIndex]);
+				}
 			}
-
-			fprintf(stdout, "%u ", outputRBGIndex[i]);
-
+			else
+			fprintf(stdout, "%u ", redValueFromDci1[i]);
 		}
 		fprintf(stdout,"\n");
-
+		free(redValueFromDci1);
+		free(outputRBGIndex);
 		break;
 	}
 	case dci60a:
