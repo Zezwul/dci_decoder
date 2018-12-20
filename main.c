@@ -53,6 +53,7 @@ int main(const int argc, const char* argv[])
 		uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
 				TPC, CSIR, SRSR, PDCCH };
 		const uint32_t dci60a_shiftOrigin = 31;
+
 		break;
 	}
 	default:

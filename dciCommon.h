@@ -26,10 +26,13 @@
 #define DCI1_NUMBER_PARAM 7
 
 /* dci60a Length of parameters */
+#define DCI60A_RIV_LEN 5
+#define NARROWBAND_INDEX 4
 #define MCS60A 4
 #define PUSCH 2
 #define PDCCH 2
-#define DCI60A_NUMBER_PARAM 10
+#define DCI60A_NUMBER_PARAM 12
+#define NUMBER_OF_ALLOCATED_RBS 6
 
 typedef enum dci0_OutputParameters
 {
@@ -72,6 +75,7 @@ typedef enum dci1_OutputParameters
 
 typedef enum dci60a_InputParameters
 {
+	dci60a_formtFlag,
 	dci60a_narrowbandIndex,
 	dci60a_rivLength,
 	dci60a_MCS,
@@ -208,8 +212,8 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
  *
 **********************************************************************************************************/
 
-uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
-        uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
+uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
+		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
 
 void dci_print(char* output);
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray);

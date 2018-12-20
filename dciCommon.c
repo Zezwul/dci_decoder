@@ -36,21 +36,6 @@ const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
-static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
-
-static const uint32_t dci60a_avaibleFirstPrbs[AMOUNT_OF_BANDWIDTHS]
-             [MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS] =
-             {
-              {0},
-			  {1, 8},
-			  {0, 5, 13, 19},
-			  {1, 7, 13, 19, 25, 31, 37, 43},
-			  {1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68},
-			  {2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92}
-             };
-
-static const uint32_t dci60a_lenghtOfFirstPrbsArrays[] = {1, 2, 4, 8, 12, 16};
-
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
     uint32_t numberOfSignificantBits = 0;
@@ -157,7 +142,7 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%lx", dci_readArgumentsStdin);
+	return (uint32_t)scanf("%"SCNu64, dci_readArgumentsStdin);
 }
 
 void dci_print(char* output /*?*/)
@@ -167,15 +152,15 @@ void dci_print(char* output /*?*/)
 
 static uint32_t getBits(uint64_t dciToRead, uint32_t startRead, uint32_t shift)
 {
-    uint64_t shiftedDci = (dciToRead >> (startRead + 1 - shift));
-    uint64_t mask = (uint64_t)(~((uint)~0 << shift));
-    uint64_t bits = shiftedDci & mask;
+	uint64_t shiftedDci = (dciToRead >> (startRead + 1 - shift));
+	uint64_t mask = (uint64_t)(~((uint)~0 << shift));
+	uint64_t bits = shiftedDci & mask;
 
-    return (uint32_t)bits;
+	return (uint32_t)bits;
 }
 
 uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
-        uint32_t sizeOfArray, uint32_t startingPoint)
+		uint32_t sizeOfArray, uint32_t startingPoint)
 {
 	uint32_t* outputArray = malloc(sizeof(*outputArray)*sizeOfArray);
 	for (uint8_t i = 0; i < sizeOfArray; i++)
@@ -275,22 +260,6 @@ void dci1_CorrectnessParameters(uint32_t* dciParam)
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
 {
 	uint32_t errorCounter = 0;
-	for (bandwidth_t i = BW_1_4MHz; i < AMOUNT_OF_BANDWIDTHS; i++)
-	{
-		if (dci60a_bandwidthPRB == dciBandwidthToPrb[i])
-		{
-			for (size_t j = 0; j < dci60a_lenghtOfFirstPrbsArrays[i]; j++ )
-			{
-				if (!(dci60a_avaibleFirstPrbs[i][j] == dciParam[dci0_firstPRBOutput] &&
-						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS - 1 ==
-								dciParam[dci0_lastPRBOutput]))
-				{
-					DEBUG_PRINT("ERR_OCC_FirstPRB_or_LastPRB_is_not_avaible_for_CAT-M_cells\n");
-					errorCounter++;
-				}
-			}
-		}
-	}
 	if (dciParam[dci60a_MCSoutput] > MAX_MCS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_MCS_parametr\n");
@@ -353,7 +322,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 	}
 }
 
-uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
+uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
 		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB)
 {
 	if (outFirstPRB == NULL || outLastPRB == NULL)
@@ -363,12 +332,25 @@ uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
 	}
 	uint32_t PRBFirst = 0;
 	uint32_t PRBLength = 0;
-	PRBFirst = (riv % bandwidthPRB);
-	PRBLength = (riv / bandwidthPRB + 1);
-	if (PRBFirst + PRBLength > bandwidthPRB)
+
+	if (dciType == dci60a)
 	{
-		PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);
-		PRBLength = (uint32_t)(bandwidthPRB + 1 - PRBLength + 1);
+		PRBFirst = (riv % bandwidthPRB);
+		PRBLength = NUMBER_OF_ALLOCATED_RBS;
+		if (PRBFirst + PRBLength > bandwidthPRB)
+		{
+			PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);
+		}
+	}
+	else
+	{
+		PRBFirst = (riv % bandwidthPRB);
+		PRBLength = (riv / bandwidthPRB + 1);
+		if (PRBFirst + PRBLength > bandwidthPRB)
+		{
+			PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);
+			PRBLength = (uint32_t)(bandwidthPRB + 1 - PRBLength + 1);
+		}
 	}
 	*outFirstPRB = PRBFirst;
 	*outLastPRB = PRBFirst + PRBLength - 1;
