@@ -171,13 +171,13 @@ Test(dci1Test, dci1_calculateShiftOriginTest)
 Test(endToEndTests, dci1_endToEndTest)
 {
 #define TEST_ARR_LEN 4
-
 	bandwidth_t dci_bandwidth[TEST_ARR_LEN] = {5, 4, 3, 2};
 	uint64_t inputArguments[TEST_ARR_LEN] =  {0x0420005b74, 0x272006dd00, 0x34e01b7c, 0x47a3d7e0};
 	uint32_t properReadVal[TEST_ARR_LEN][DCI1_NUMBER_PARAM] = {{0, 1081345, 13, 5, 1, 2, 2},
 			{0, 160256, 13, 5, 1, 2, 2}, {0, 54144, 13, 5, 1, 3, 2},{0, 4584, 30, 5, 1, 3, 3}};
 	uint32_t properIndexVal[][7] = {{3,4,9,24}, {5,1,4,5,6,9},
 			{6, 1, 2, 4, 7, 8, 9}, {6, 0, 4, 5, 6, 7, 9}};
+	uint32_t reverseIndexValArray;
 
 	for (uint32_t i = 0; i < TEST_ARR_LEN; i++)
 	{
@@ -190,21 +190,22 @@ Test(endToEndTests, dci1_endToEndTest)
 				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
 		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(redValueFromDci1[dci1_bitmap], dci1_offsetArray[dci1_bitmap]);
 
-		for (uint32_t elemOfProperReadValArray = 0;
-		elemOfProperReadValArray < DCI1_NUMBER_PARAM; elemOfProperReadValArray++)
+		for (uint32_t elemOfReadValArray = 0;
+				elemOfReadValArray < DCI1_NUMBER_PARAM; elemOfReadValArray++)
 		{
-			cr_expect(redValueFromDci1[elemOfProperReadValArray] == properReadVal[i][elemOfProperReadValArray],
-					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfProperReadValArray:%d]",
-					properReadVal[i][elemOfProperReadValArray],
-					redValueFromDci1[elemOfProperReadValArray], i, elemOfProperReadValArray);
+			cr_expect(redValueFromDci1[elemOfReadValArray] == properReadVal[i][elemOfReadValArray],
+					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfReadValArray:%d]",
+					properReadVal[i][elemOfReadValArray],
+					redValueFromDci1[elemOfReadValArray], i, elemOfReadValArray);
 		}
-		for (uint32_t elemOfproperIndexValArray = 1;
-		elemOfproperIndexValArray < outputRBGIndex[0] + 1; elemOfproperIndexValArray++)
+		for (uint32_t elemOfIndexValArray = 1;
+				elemOfIndexValArray < outputRBGIndex[0] + 1; elemOfIndexValArray++)
 		{
-			cr_expect(outputRBGIndex[outputRBGIndex[0] + 1 -elemOfproperIndexValArray] == properIndexVal[i][elemOfproperIndexValArray],
-					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfproperIndexValArray:%d]",
-					properIndexVal[i][elemOfproperIndexValArray],
-					outputRBGIndex[outputRBGIndex[0] + 1 -elemOfproperIndexValArray],i,elemOfproperIndexValArray);
+			reverseIndexValArray = outputRBGIndex[0] + 1 - elemOfIndexValArray;
+			cr_expect(outputRBGIndex[reverseIndexValArray] == properIndexVal[i][elemOfIndexValArray],
+					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfIndexValArra:%d]",
+					properIndexVal[i][elemOfIndexValArray],
+					outputRBGIndex[reverseIndexValArray], i, elemOfIndexValArray);
 		}
 	}
 }
