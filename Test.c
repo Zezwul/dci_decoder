@@ -162,6 +162,49 @@ Test(dci1Test, dci1_calculateShiftOriginTest)
 	{
 		dci1_offsetArray[dci1_bitmap] = possibleLengthBitsRBG[i];
 		testVal = dci1_calculateShiftOrigin(dci1_offsetArray);
-		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin [%d] test loop are incorrect", i);
+		cr_expect(testVal = correctValues[i],
+		"Value returned from dci1_calculateShiftOrigin [%d] test loop are incorrect", i);
+	}
+}
+
+
+Test(endToEndTests, dci1_endToEndTest)
+{
+#define TEST_ARR_LEN 4
+
+	bandwidth_t dci_bandwidth[TEST_ARR_LEN] = {5, 4, 3, 2};
+	uint64_t inputArguments[TEST_ARR_LEN] =  {0x0420005b74, 0x272006dd00, 0x34e01b7c, 0x47a3d7e0};
+	uint32_t properReadVal[TEST_ARR_LEN][DCI1_NUMBER_PARAM] = {{0, 1081345, 13, 5, 1, 2, 2},
+			{0, 160256, 13, 5, 1, 2, 2}, {0, 54144, 13, 5, 1, 3, 2},{0, 4584, 30, 5, 1, 3, 3}};
+	uint32_t properIndexVal[][7] = {{3,4,9,24}, {5,1,4,5,6,9},
+			{6, 1, 2, 4, 7, 8, 9}, {6, 0, 4, 5, 6, 7, 9}};
+
+	for (uint32_t i = 0; i < TEST_ARR_LEN; i++)
+	{
+		uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+
+		dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth[i]);
+		uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
+
+		uint32_t* redValueFromDci1 = dci_readValueFromDCI(inputArguments[i], dci1_offsetArray,
+				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
+		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(redValueFromDci1[dci1_bitmap], dci1_offsetArray[dci1_bitmap]);
+
+		for (uint32_t elemOfProperReadValArray = 0;
+		elemOfProperReadValArray < DCI1_NUMBER_PARAM; elemOfProperReadValArray++)
+		{
+			cr_expect(redValueFromDci1[elemOfProperReadValArray] == properReadVal[i][elemOfProperReadValArray],
+					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfProperReadValArray:%d]",
+					properReadVal[i][elemOfProperReadValArray],
+					redValueFromDci1[elemOfProperReadValArray], i, elemOfProperReadValArray);
+		}
+		for (uint32_t elemOfproperIndexValArray = 1;
+		elemOfproperIndexValArray < outputRBGIndex[0] + 1; elemOfproperIndexValArray++)
+		{
+			cr_expect(outputRBGIndex[outputRBGIndex[0] + 1 -elemOfproperIndexValArray] == properIndexVal[i][elemOfproperIndexValArray],
+					"End to end test: Expected value: %d, Readed value: %d, Loop [i:%d elemOfproperIndexValArray:%d]",
+					properIndexVal[i][elemOfproperIndexValArray],
+					outputRBGIndex[outputRBGIndex[0] + 1 -elemOfproperIndexValArray],i,elemOfproperIndexValArray);
+		}
 	}
 }
