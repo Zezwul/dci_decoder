@@ -26,10 +26,35 @@
 
 #define MOD_8_MASK 0x7
 
+#define FREE(ptr)\
+do { \
+    free(ptr);\
+    ptr = NULL;\
+   } while(0)
+
+const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
+
+uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
+
+static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
+
+static const uint32_t dci60a_avaibleFirstPrbs[AMOUNT_OF_BANDWIDTHS]
+             [MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS] =
+             {
+              {0},
+			  {1, 8},
+			  {0, 5, 13, 19},
+			  {1, 7, 13, 19, 25, 31, 37, 43},
+			  {1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68},
+			  {2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92}
+             };
+
+static const uint32_t dci60a_lenghtOfFirstPrbsArrays[] = {1, 2, 4, 8, 12, 16};
+
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
     uint32_t numberOfSignificantBits = 0;
-    for(dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+    for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
     {
         numberOfSignificantBits += shiftArray[i];
     }
@@ -44,18 +69,26 @@ uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
     return temp * CHAR_BIT - 1;
 }
 
-const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
+void dci1_printResults(uint32_t* readValueFromDci1, uint32_t* outputRBGIndex)
+{
+	for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+	{
+		if (i == dci1_bitmap)
+		{
+			fprintf(stdout, "%u ", outputRBGIndex[0]);
 
-uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
-
-static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
-
-static const uint32_t dci60a_avaibleFirstPrbs[AMOUNT_OF_BANDWIDTHS][MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS] = {
-		{0}, {1, 8}, {0, 5, 13, 19},
-		{1, 7, 13, 19, 25, 31, 37, 43}, {1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68},
-		{2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92}};
-
-static const uint32_t dci60a_lenghtOfFirstPrbsArrays[] = {1, 2, 4, 8, 12, 16};
+			for (uint32_t bitmapIndex = 1; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
+			{
+			fprintf(stdout, "%u ", outputRBGIndex[outputRBGIndex[0] + 1 -bitmapIndex]);
+			}
+		}
+		else
+		fprintf(stdout, "%u ", readValueFromDci1[i]);
+	}
+	fprintf(stdout,"\n");
+	FREE(readValueFromDci1);
+	FREE(outputRBGIndex);
+}
 
 uint32_t dci0_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 {
@@ -291,7 +324,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_RSreqOutput] > MAX_SRS_REQ)
+	if (dciParam[dci60a_SRSreqOutput] > MAX_SRS_REQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
 		errorCounter++;

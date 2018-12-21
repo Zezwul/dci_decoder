@@ -82,7 +82,7 @@ enum dci60a_InputParameters
 	dci60a_RV,
 	dci60a_TPC,
 	dci60a_CSIreq,
-	dci60a_RSreq,
+	dci60a_SRSreq,
 	dci60a_PDCCH,
 	dci60a_maxAmmountOfArguments
 } dci60a_InputParameters;
@@ -98,7 +98,7 @@ enum dci60a_OutputParameters
 	dci60a_RVoutput,
 	dci60a_TPCoutput,
 	dci60a_CSIreqOutput,
-	dci60a_RSreqOutput,
+	dci60a_SRSreqOutput,
 	dci60a_PDCCHOutput,
 	dci60a_maxAmountOfArgumentsOutput
 } dci60a_OutputParameters;
@@ -128,6 +128,16 @@ void dci1_CorrectnessParameters(uint8_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
 
+/* > Function: dci1_printResults
+**********************************************************************************************************
+ * @brief   Function is printing values readed from 2 arrays specific for DCI1
+ *
+ * @param[in]   readValueFromDci1:	array containing values readed from DCI 1
+ * @param[in]   outputRBGIndex:	array containing values from dci1_bitmapDecoder function
+ *
+**********************************************************************************************************/
+
+void dci1_printResults(uint32_t* redValueFromDci1, uint32_t* outputRBGIndex);
 
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
@@ -137,12 +147,13 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
  * @param[in]   dci:                Number (DCI message) read from input of programm
  * @param[in]   bitLenghtOfDciParameter[]:  Array containing bitlenght of every DCI parameter in readed dci
  * @param[in]   sizeOfArray:            number of elements of bitLenghtOfDciParameter array
- * @param[in]   dci_readValueFromDCI_p:     pointer to array containing a DCI parameter decofe from readed dci
+ * @param[in]   startingPoint:     index of bit in dci from which have to start read
  *
 **********************************************************************************************************/
 
 uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
         uint32_t sizeOfArray, uint32_t startingPoint);
+
 /* > Function: dci1_bitmapDecoder
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use
@@ -151,7 +162,6 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
  * @param[in]   bitmap:             is number specific to DCI1 format. Its first readed number in array
  *                      from dci_readValueFromDCI function
  * @param[in]   bitmapBitLenght:        Its number dependend on bandwidth
- * @param[in]   dci1_bitmapDecoder_p:       pointer to array containing a DCI parameter decofe from readed dci
  *
 **********************************************************************************************************/
 
