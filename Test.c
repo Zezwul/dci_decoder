@@ -118,7 +118,8 @@ Test(libTest,dci_readValueFromDCITest)
 Test(libTest,dci1_bitmapDecoderTest)
 {
 	uint32_t bitmap[5] = {13, 25, 9000, 1564, 16777216};
-	uint32_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11}, {5, 22, 21, 20, 15, 14}, {1,0}};
+	uint32_t testArray[5][6] = {{3,24,22,21}, {3, 24, 21, 20}, {5, 21, 19, 16, 15, 11},
+			{5, 22, 21, 20, 15, 14}, {1,0}};
 	uint32_t bitmapBitLenght = 25;
 	uint32_t* outputBitmap;
 	for (uint32_t i = 0; i < 5; i++)
@@ -126,7 +127,8 @@ Test(libTest,dci1_bitmapDecoderTest)
 		outputBitmap = dci1_bitmapDecoder(bitmap[i], bitmapBitLenght);
 		for (uint32_t j = 0; j < testArray[i][0]+1; j++)
 		{
-			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not working propertly - i: %d and j: %d", i, j);
+			cr_expect(testArray[i][j] == outputBitmap[j], "dci1_bitmapDecoder is not "
+					"working propertly - i: %d and j: %d", i, j);
 		}
 		free(outputBitmap);
 	}
@@ -162,6 +164,52 @@ Test(dci1Test, dci1_calculateShiftOriginTest)
 	{
 		dci1_offsetArray[dci1_bitmap] = possibleLengthBitsRBG[i];
 		testVal = dci1_calculateShiftOrigin(dci1_offsetArray);
-		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin [%d] test loop are incorrect", i);
+		cr_expect(testVal = correctValues[i], "Value returned from dci1_calculateShiftOrigin "
+				"[%d] test loop are incorrect", i);
+	}
+}
+
+Test(endToEndTests, dci1_endToEndTest)
+{
+#define TEST_ARR_LEN 4
+	bandwidth_t dci_bandwidth[TEST_ARR_LEN] = {5, 4, 3, 2};
+	uint64_t inputArguments[TEST_ARR_LEN] =  {0x0420005b74, 0x272006dd00, 0x34e01b7c, 0x47a3d7e0};
+	uint32_t properReadVal[TEST_ARR_LEN][DCI1_NUMBER_PARAM] = {{0, 1081345, 13, 5, 1, 2, 2},
+			{0, 160256, 13, 5, 1, 2, 2}, {0, 54144, 13, 5, 1, 3, 2},{0, 4584, 30, 5, 1, 3, 3}};
+	uint32_t properIndexVal[][7] = {{3,4,9,24}, {5,1,4,5,6,9},
+			{6, 1, 2, 4, 7, 8, 9}, {6, 0, 4, 5, 6, 7, 9}};
+	uint32_t reverseIndexValArray;
+
+	for (uint32_t i = 0; i < TEST_ARR_LEN; i++)
+	{
+		uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
+
+		dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth[i]);
+		uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
+
+		uint32_t* redValueFromDci1 = dci_readValueFromDCI(inputArguments[i], dci1_offsetArray,
+				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
+		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(redValueFromDci1[dci1_bitmap],
+				dci1_offsetArray[dci1_bitmap]);
+
+		for (uint32_t elemOfReadValArray = 0;
+				elemOfReadValArray < DCI1_NUMBER_PARAM; elemOfReadValArray++)
+		{
+			cr_expect(redValueFromDci1[elemOfReadValArray] == properReadVal[i][elemOfReadValArray],
+					"End to end test: Expected value: %d, "
+					"Readed value: %d, Loop [i:%d elemOfReadValArray:%d]",
+					properReadVal[i][elemOfReadValArray],
+					redValueFromDci1[elemOfReadValArray], i, elemOfReadValArray);
+		}
+		for (uint32_t elemOfIndexValArray = 1;
+				elemOfIndexValArray < outputRBGIndex[0] + 1; elemOfIndexValArray++)
+		{
+			reverseIndexValArray = outputRBGIndex[0] + 1 - elemOfIndexValArray;
+			cr_expect(outputRBGIndex[reverseIndexValArray] == properIndexVal[i][elemOfIndexValArray],
+					"End to end test: Expected value: %d, "
+					"Readed value: %d, Loop [i:%d elemOfIndexValArra:%d]",
+					properIndexVal[i][elemOfIndexValArray],
+					outputRBGIndex[reverseIndexValArray], i, elemOfIndexValArray);
+		}
 	}
 }
