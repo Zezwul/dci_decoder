@@ -54,7 +54,7 @@ static const uint32_t dci60a_lenghtOfFirstPrbsArrays[] = {1, 2, 4, 8, 12, 16};
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
     uint32_t numberOfSignificantBits = 0;
-    for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+    for (dci1_OutputParameters i = dci1_raTypeValue; i < dci1_maxAmountOfArgumentsValue; i++)
     {
         numberOfSignificantBits += shiftArray[i];
     }
@@ -71,15 +71,13 @@ uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 
 void dci1_printResults(uint32_t* readValueFromDci1, uint32_t* outputRBGIndex)
 {
-	for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
+	for (dci1_OutputParameters i = dci1_raTypeValue; i < dci1_maxAmountOfArgumentsValue; i++)
 	{
-		if (i == dci1_bitmap)
+		if (i == dci1_bitmapValue)
 		{
-			fprintf(stdout, "%u ", outputRBGIndex[0]);
-
-			for (uint32_t bitmapIndex = 1; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
+			for (uint32_t bitmapIndex = 0; bitmapIndex < outputRBGIndex[0] + 1; bitmapIndex++)
 			{
-			fprintf(stdout, "%u ", outputRBGIndex[outputRBGIndex[0] + 1 -bitmapIndex]);
+			fprintf(stdout, "%u ", outputRBGIndex[bitmapIndex]);
 			}
 		}
 		else
@@ -226,31 +224,31 @@ void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthP
 void dci1_CorrectnessParameters(uint8_t* dciParam)
 {
 	uint32_t errorCounter = 0;
-	if (dciParam[dci1_mcsindex] > MAX_MCS)
+	if (dciParam[dci1_mcsindexValue] > MAX_MCS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_MCS_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci1_harq] > MAX_HARQ)
+	if (dciParam[dci1_harqValue] > MAX_HARQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_HARQ_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci1_newDataIndicator] > MAX_NDI)
+	if (dciParam[dci1_newDataIndicatorValue] > MAX_NDI)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_NDI_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci1_redundancyVersion] > MAX_RV)
+	if (dciParam[dci1_redundancyVersionValue] > MAX_RV)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_RV_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci1_pucchTpcCommand] > MAX_TPC)
+	if (dciParam[dci1_pucchTpcCommandValue] > MAX_TPC)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_TPC_parametr\n");
 		errorCounter++;
@@ -364,7 +362,7 @@ uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
 	return 0;
 }
 
-uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
+uint32_t* dci1_DecodeValuesFromBitmap(uint32_t bitmap, uint32_t bitmapBitLenght)
 {
 	uint32_t counter = bitmapBitLenght-1;
 	uint32_t* outputRBGIndex = malloc(sizeof(*outputRBGIndex));
@@ -382,5 +380,16 @@ uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght)
 		i++;
 	}
 	outputRBGIndex[0] = j;
+
+	uint32_t reverseArrCounter = outputRBGIndex[0];
+	uint32_t reverseArrCounterTwo = 1;
+	while(reverseArrCounter > reverseArrCounterTwo)
+	{
+		uint32_t temp = outputRBGIndex[reverseArrCounter];
+		outputRBGIndex[reverseArrCounter] = outputRBGIndex[reverseArrCounterTwo];
+		outputRBGIndex[reverseArrCounterTwo] = temp;
+		reverseArrCounter--;
+		reverseArrCounterTwo++;
+	}
 	return outputRBGIndex;
 }
