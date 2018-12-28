@@ -139,6 +139,17 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 
 void dci1_printResults(uint32_t* redValueFromDci1, uint32_t* outputRBGIndex);
 
+/* > Function: dci1_printResults
+**********************************************************************************************************
+ * @brief   Function is printing output values and freeing arrays
+ *
+ * @param[in]   readValueFromDci0:  array containing values read from DCI0
+ * @param[in]   outputArray: array containing decoded and ready to print values
+ *
+**********************************************************************************************************/
+
+void dci0_printResultsAndFreeArrays(uint32_t* readValueFromDci0, uint32_t* outputArray);
+
 /* > Function: dci_readValueFromDCI
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use

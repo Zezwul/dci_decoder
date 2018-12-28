@@ -69,6 +69,29 @@ uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
     return temp * CHAR_BIT - 1;
 }
 
+void dci0_printResultsAndFreeArrays(uint32_t* readValueFromDci0, uint32_t* outputArray)
+{
+    dci0_OutputParameters outputElementIndex = dci0_mcsindexOutput;
+    dci0_InputParameters inputElementIndex = dci0_mcsindex;
+
+    for ( ; outputElementIndex < dci0_maxAmountOfArgumentsOutput;
+            outputElementIndex++, inputElementIndex++)
+    {
+        outputArray[outputElementIndex] = readValueFromDci0[inputElementIndex];
+    }
+
+    for (dci0_OutputParameters i = dci0_firstPRBOutput;
+            i < dci0_maxAmountOfArgumentsOutput; ++i)
+    {
+        fprintf(stdout, "%u ", outputArray[i]);
+    }
+
+    fprintf(stdout, "\n");
+
+    FREE(readValueFromDci0);
+    FREE(outputArray);
+}
+
 void dci1_printResults(uint32_t* readValueFromDci1, uint32_t* outputRBGIndex)
 {
 	for (dci1_OutputParameters i = dci1_raType; i < dci1_maxAmountOfArguments; i++)
