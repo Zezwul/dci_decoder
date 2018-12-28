@@ -55,7 +55,7 @@ int main(const int argc, const char* argv[])
 		uint32_t* readValueFromDci1 = dci_readValueFromDCI(inputArguments, dci1_offsetArray,
 				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
 
-		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(readValueFromDci1[dci1_bitmapValue], dci1_offsetArray[dci1_bitmapValue]);
+		uint32_t* outputRBGIndex =  dci1_DecodeValuesFromBitmap(readValueFromDci1[dci1_bitmapValue], dci1_offsetArray[dci1_bitmapValue]);
 		dci1_printResults(readValueFromDci1, outputRBGIndex);
 		break;
 	}

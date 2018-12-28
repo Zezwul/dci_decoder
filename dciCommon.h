@@ -154,7 +154,7 @@ void dci1_printResults(uint32_t* redValueFromDci1, uint32_t* outputRBGIndex);
 uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
         uint32_t sizeOfArray, uint32_t startingPoint);
 
-/* > Function: dci1_bitmapDecoder
+/* > Function: dci1_DecodeValuesFromBitmap
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use
  *          bitLenghtOfDciParameter array.
