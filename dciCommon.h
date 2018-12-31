@@ -61,14 +61,14 @@ typedef enum dci0_InputParameters
 
 typedef enum dci1_OutputParameters
 {
-	dci1_raType,
-	dci1_bitmap,
-	dci1_mcsindex,
-	dci1_harq,
-	dci1_newDataIndicator,
-	dci1_redundancyVersion,
-	dci1_pucchTpcCommand,
-	dci1_maxAmountOfArguments
+	dci1_raTypeValue,
+	dci1_bitmapValue,
+	dci1_mcsindexValue,
+	dci1_harqValue,
+	dci1_newDataIndicatorValue,
+	dci1_redundancyVersionValue,
+	dci1_pucchTpcCommandValue,
+	dci1_maxAmountOfArgumentsValue
 } dci1_OutputParameters;
 
 enum dci60a_InputParameters
@@ -165,7 +165,7 @@ void dci0_printResultsAndFreeArrays(uint32_t* readValueFromDci0, uint32_t* outpu
 uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
         uint32_t sizeOfArray, uint32_t startingPoint);
 
-/* > Function: dci1_bitmapDecoder
+/* > Function: dci1_DecodeValuesFromBitmap
 **********************************************************************************************************
  * @brief   Creates array of uint32_t which are parameters decode from DCI with use
  *          bitLenghtOfDciParameter array.
@@ -176,7 +176,7 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
  *
 **********************************************************************************************************/
 
-uint32_t* dci1_bitmapDecoder(uint32_t bitmap, uint32_t bitmapBitLenght);
+uint32_t* dci1_DecodeValuesFromBitmap(uint32_t bitmap, uint32_t bitmapBitLenght);
 
 /* > Function: dci_DefineDci
  *******************************************************************************************************/
