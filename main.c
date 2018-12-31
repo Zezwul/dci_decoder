@@ -23,27 +23,12 @@ int main(const int argc, const char* argv[])
 
 		const uint32_t dci0_shiftOrigin = 31;
 
-		uint32_t* readValueFromDci0 = malloc(sizeof(uint32_t) * dci0_maxAmmountOfArguments);
-		readValueFromDci0 = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
+		uint32_t* readValueFromDci0 = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
 				DCI0_NUMBER_PARAM, dci0_shiftOrigin);
 		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci0_maxAmountOfArgumentsOutput);
 		dci_rivDecode(dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
 				&outputArray[dci0_firstPRBOutput], &outputArray[dci0_lastPRBOutput]);
-
-		dci0_OutputParameters outputElementIndex = dci0_mcsindexOutput;
-		dci0_InputParameters inputElementIndex = dci0_mcsindex;
-		for ( ; outputElementIndex < dci0_maxAmountOfArgumentsOutput;
-				outputElementIndex++, inputElementIndex++)
-		{
-			outputArray[outputElementIndex] = readValueFromDci0[inputElementIndex];
-		}
-
-		for (dci0_OutputParameters i = dci0_firstPRBOutput;
-				i < dci0_maxAmountOfArgumentsOutput; ++i)
-		{
-			fprintf(stdout, "%u ", outputArray[i]);
-		}
-		fprintf(stdout, "\n");
+		dci0_printResultsAndFreeArrays(readValueFromDci0, outputArray);
 		break;
 	}
 	case dci1:
