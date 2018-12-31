@@ -49,14 +49,13 @@ int main(const int argc, const char* argv[])
 	case dci1:
 	{
 		uint32_t dci1_offsetArray[DCI1_NUMBER_PARAM] = {RA, BITMAP_LEN, MCS, HARQ, NDI, RV, TPC};
-		dci1_offsetArray[dci1_bitmap] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
+		dci1_offsetArray[dci1_bitmapValue] = dci1_lengthOfBitmapViaBandwidth(dci_bandwidth);
 		uint32_t dci1_shiftOrigin = dci1_calculateShiftOrigin(dci1_offsetArray);
 
 		uint32_t* readValueFromDci1 = dci_readValueFromDCI(inputArguments, dci1_offsetArray,
 				DCI1_NUMBER_PARAM, dci1_shiftOrigin);
 
-		uint32_t* outputRBGIndex =  dci1_bitmapDecoder(readValueFromDci1[dci1_bitmap], dci1_offsetArray[dci1_bitmap]);
-
+		uint32_t* outputRBGIndex =  dci1_DecodeValuesFromBitmap(readValueFromDci1[dci1_bitmapValue], dci1_offsetArray[dci1_bitmapValue]);
 		dci1_printResults(readValueFromDci1, outputRBGIndex);
 		break;
 	}
