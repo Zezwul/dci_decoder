@@ -244,7 +244,7 @@ void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthP
 	}
 }
 
-void dci1_CorrectnessParameters(uint8_t* dciParam)
+void dci1_CorrectnessParameters(uint32_t* dciParam)
 {
 	uint32_t errorCounter = 0;
 	if (dciParam[dci1_mcsindexValue] > MAX_MCS)
