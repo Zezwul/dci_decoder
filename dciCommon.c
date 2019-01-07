@@ -196,7 +196,8 @@ void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthP
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_firstPRBOutput] > dciParam[dci0_lastPRBOutput] || dciParam[dci0_lastPRBOutput] >= dci0_bandwidthPRB)
+	if (dciParam[dci0_firstPRBOutput] > dciParam[dci0_lastPRBOutput] ||
+			dciParam[dci0_lastPRBOutput] >= dci0_bandwidthPRB)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_PRB\n");
 		errorCounter++;
@@ -293,7 +294,8 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 			for (size_t j = 0; j < dci60a_lenghtOfFirstPrbsArrays[i]; j++ )
 			{
 				if (!(dci60a_avaibleFirstPrbs[i][j] == dciParam[dci0_firstPRBOutput] &&
-						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS - 1 == dciParam[dci0_lastPRBOutput]))
+						dci60a_avaibleFirstPrbs[i][j] + DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS - 1 ==
+								dciParam[dci0_lastPRBOutput]))
 				{
 					DEBUG_PRINT("ERR_OCC_FirstPRB_or_LastPRB_is_not_avaible_for_CAT-M_cells\n");
 					errorCounter++;

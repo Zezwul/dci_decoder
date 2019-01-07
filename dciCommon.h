@@ -9,7 +9,6 @@
 /* Shared Length of parameters */
 #define FORMAT_FLAG 1
 #define HOPPING_FLAG 1
-#define RIV 13
 #define CSIR 1
 #define SRSR 1
 #define NDI 1
@@ -20,10 +19,10 @@
 
 /* dci0 Length of parameters */
 #define DMRS 3
-#define RA 1
 #define DCI0_NUMBER_PARAM 9
 
 /* dci1 Length of parameters */
+#define RA 1
 #define DCI1_NUMBER_PARAM 7
 
 /* dci60a Length of parameters */
@@ -71,7 +70,7 @@ typedef enum dci1_OutputParameters
 	dci1_maxAmountOfArgumentsValue
 } dci1_OutputParameters;
 
-enum dci60a_InputParameters
+typedef enum dci60a_InputParameters
 {
 	dci60a_narrowbandIndex,
 	dci60a_rivLength,
@@ -87,7 +86,7 @@ enum dci60a_InputParameters
 	dci60a_maxAmmountOfArguments
 } dci60a_InputParameters;
 
-enum dci60a_OutputParameters
+typedef enum dci60a_OutputParameters
 {
 	dci60a_FirstPRBoutput,
 	dci60a_LastPRBoutput,

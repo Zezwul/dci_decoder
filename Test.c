@@ -48,9 +48,19 @@ Test(TestArguments, dci_ValidPositiveArguments)
 			{"0", "dci60a", "20"},
 	};
 
-	uint8_t dci_bitLengthArray_expected[] = {6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100, 6, 15, 25, 50, 75, 100};
-	dciType dci_str_expected[] = {dci0, dci0, dci0, dci0, dci0, dci0, dci1, dci1, dci1,
-			dci1, dci1, dci1, dci60a, dci60a, dci60a, dci60a, dci60a, dci60a};
+	uint8_t dci_bitLengthArray_expected[] =
+	{
+			6, 15, 25, 50, 75, 100,
+			6, 15, 25, 50, 75, 100,
+			6, 15, 25, 50, 75, 100
+	};
+
+	dciType dci_str_expected[] =
+	{
+			dci0, dci0, dci0, dci0, dci0, dci0,
+			dci1, dci1, dci1, dci1, dci1, dci1,
+			dci60a, dci60a, dci60a, dci60a, dci60a, dci60a
+	};
 
 	uint32_t bandwidthPRB;
 	dciType dciResult;
