@@ -94,7 +94,7 @@ void dci0_printResultsAndFreeArrays(uint32_t* readValueFromDci0, uint32_t* outpu
 
 void dci1_printResults(uint32_t* readValueFromDci1, uint32_t* outputRBGIndex)
 {
-	for (dci1_OutputParameters i = dci1_raTypeValue; i < dci1_maxAmountOfArgumentsValue; i++)
+	for (dci1_OutputParameters i = dci1_bitmapValue; i < dci1_maxAmountOfArgumentsValue; i++)
 	{
 		if (i == dci1_bitmapValue)
 		{
@@ -186,54 +186,42 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
 	return outputArray;
 }
 
-void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB)
+void dci0_CorrectnessParameters(uint32_t* dciParam, const uint32_t dci0_bandwidthPRB)
 {
 	uint32_t errorCounter = 0;
 
-	if (dciParam[dci0_firstPRBOutput] >= dci0_bandwidthPRB)
-	{
-		DEBUG_PRINT("ERR_OCC_Value_of_FirstPRB_is_too_big\n");
-		errorCounter++;
-	}
-
-	if (dciParam[dci0_firstPRBOutput] > dciParam[dci0_lastPRBOutput] ||
-			dciParam[dci0_lastPRBOutput] >= dci0_bandwidthPRB)
-	{
-		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_PRB\n");
-		errorCounter++;
-	}
-
-	if (dciParam[dci0_mcsindexOutput] > MAX_MCS)
+	if (dciParam[dci0_mcsindex] > MAX_MCS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value_of_MCS_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_newDataIndicatorOutput] > MAX_NDI)
+	if (dciParam[dci0_newDataIndicator] > MAX_NDI)
 	{
+		printf("ndi: %i\n", dciParam[dci0_newDataIndicator]);
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_pucchTpcCommandOutput] > MAX_TPC)
+	if (dciParam[dci0_pucchTpcCommand] > MAX_TPC)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_TPC_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_dmrsCyclicOutput] > MAX_DMRS)
+	if (dciParam[dci0_dmrsCyclic] > MAX_DMRS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_DMRS_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_csiRqstOutput] > MAX_CSI_REQ)
+	if (dciParam[dci0_csiRqst] > MAX_CSI_REQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci0_srsRqstOutput] > MAX_SRS_REQ)
+	if (dciParam[dci0_srsRqst] > MAX_SRS_REQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
 		errorCounter++;

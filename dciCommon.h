@@ -122,7 +122,7 @@ typedef enum dciType
 } dciType;
 
 uint32_t dci0_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
-void dci0_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci0_bandwidthPRB);
+void dci0_CorrectnessParameters(uint32_t* dciParam, const uint32_t dci0_bandwidthPRB);
 void dci1_CorrectnessParameters(uint32_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
