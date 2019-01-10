@@ -33,6 +33,7 @@
 #define PDCCH 2
 #define DCI60A_NUMBER_PARAM 12
 #define NUMBER_OF_ALLOCATED_RBS 6
+#define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
 typedef enum dci0_OutputParameters
 {

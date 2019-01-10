@@ -21,8 +21,9 @@
 #define MAX_SRS_REQ 1
 #define MAX_PUSCH 3
 #define MAX_PDCCH 3
+#define DCI60A_MAX_NUMBER_OF_LAST_PRB 5
 #define DCI60A_MAX_NUMBER_OF_ALLOCATED_RBS 6
-#define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
+#define PRBS_IN_ONE_NARROWBAND 6
 
 #define MOD_8_MASK 0x7
 
@@ -35,6 +36,8 @@ do { \
 const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
+
+static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
 
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
@@ -102,7 +105,7 @@ uint32_t dci0_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 	return possibleLengthBitsOfRIV[bandwidth];
 }
 
-uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
+uint32_t dcli1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
 {
 	uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
 	return possibleLengthBitsRBG[bandwidth];
@@ -145,7 +148,7 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 	return (uint32_t)scanf("%"SCNu64, dci_readArgumentsStdin);
 }
 
-void dci_print(char* output /*?*/)
+void dci_print(char* output)
 {
 	fprintf(stdout, "%s", output);
 }
@@ -260,6 +263,7 @@ void dci1_CorrectnessParameters(uint32_t* dciParam)
 void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
 {
 	uint32_t errorCounter = 0;
+
 	if (dciParam[dci60a_MCSoutput] > MAX_MCS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_MCS_parametr\n");
@@ -322,7 +326,7 @@ void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwi
 	}
 }
 
-uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
+uint16_t dci_rivDecode(dciType dci, uint32_t bandwidthPRB, uint32_t riv,
 		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB)
 {
 	if (outFirstPRB == NULL || outLastPRB == NULL)
@@ -332,14 +336,23 @@ uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
 	}
 	uint32_t PRBFirst = 0;
 	uint32_t PRBLength = 0;
+	uint32_t PRBLast = 0;
 
-	if (dciType == dci60a)
+	if (dci == dci60a)
 	{
 		PRBFirst = (riv % bandwidthPRB);
-		PRBLength = NUMBER_OF_ALLOCATED_RBS;
-		if (PRBFirst + PRBLength > bandwidthPRB)
+		PRBLength = (riv / bandwidthPRB + 1);
+		PRBLast = PRBFirst + PRBLength - 1;
+		if (!(PRBLast < DCI60A_MAX_NUMBER_OF_LAST_PRB))
 		{
 			PRBFirst = (uint32_t)(bandwidthPRB - 1 - PRBFirst);
+			PRBLength = (uint32_t)(bandwidthPRB + 1 - PRBLength + 1);
+			PRBLast = PRBFirst + PRBLength - 1;
+			if (PRBLast > DCI60A_MAX_NUMBER_OF_LAST_PRB)
+			{
+				DEBUG_PRINT("ERR_OCC_last_prb_out_of_range");
+				return UINT16_MAX;
+			}
 		}
 	}
 	else
@@ -387,4 +400,30 @@ uint32_t* dci1_DecodeValuesFromBitmap(uint32_t bitmap, uint32_t bitmapBitLenght)
 		reverseArrCounterTwo++;
 	}
 	return outputRBGIndex;
+}
+
+void dci60a_prbsNumberDecoder(bandwidth_t dci_bandwitdh, const uint32_t *readFromDci, uint32_t *outputParameters)
+{
+	const uint32_t prbsToNarrowbandBW1[][PRBS_IN_ONE_NARROWBAND] = {{0, 1, 2, 3, 4, 5}};
+
+	const uint32_t prbsToNarrowbandBW3[][PRBS_IN_ONE_NARROWBAND] = {{1, 2, 3, 4, 5, 6}, {8, 9, 10, 11, 12, 13}};
+
+	const uint32_t prbsToNarrowbandBW5[][PRBS_IN_ONE_NARROWBAND] = {{0, 1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11}, {13, 14, 15, 16, 17, 18}, {19, 20, 21, 22, 23, 24}};
+
+	const uint32_t prbsToNarrowbandBW10[][PRBS_IN_ONE_NARROWBAND] = {{1, 2, 3, 4, 5, 6}, {7, 8, 9, 10, 11, 12}, {13, 14, 15, 16, 17, 18}, {19, 20, 21, 22, 23, 24},
+			{25, 26, 27, 28, 29, 30}, {31, 32, 33, 34, 35, 36}, {37, 38, 39, 40, 41, 42}, {43, 44, 45, 46, 47, 48}};
+
+	const uint32_t prbsToNarrowbandBW15[][PRBS_IN_ONE_NARROWBAND] = {{1, 2, 3, 4, 5, 6}, {7, 8, 9, 10, 11, 12}, {13, 14, 15, 16, 17, 18}, {19, 20, 21, 22, 23, 24},
+			{25, 26, 27, 28, 29, 30}, {31, 32, 33, 34, 35, 36}, {38, 39, 40, 41, 42, 43},  {44, 45, 46, 47, 48, 49}, {50, 51, 52, 53, 54, 55},
+			{56, 57, 58, 59, 60, 61}, {62, 63, 64, 65, 66, 67}, {68, 69, 70, 71, 72, 73}};
+
+	const uint32_t prbsToNarrowbandBW20[][PRBS_IN_ONE_NARROWBAND] = {{2, 3, 4, 5, 6, 7}, {8, 9, 10, 11, 12, 13}, {14, 15, 16, 17, 18, 19}, {20, 21, 22, 23, 24, 25},
+			{26, 27, 28, 29, 30, 31}, {32, 33, 34, 35, 36, 37}, {38, 39, 40, 41, 42, 43}, {44, 45, 46, 47, 48, 49}, {50, 51, 52, 53, 54, 55}, {56, 57, 58, 59, 60, 61},
+			{62, 63, 64, 65, 66, 67}, {68, 69, 70, 71, 72, 73}, {74, 75, 76, 77, 78, 79}, {80, 81, 82, 83, 84, 85}, {86, 87, 88, 89, 90, 91}, {92, 93, 94, 95, 96, 97}};
+
+	const uint32_t *arr[] = {&prbsToNarrowbandBW1[0][0], &prbsToNarrowbandBW3[0][0], &prbsToNarrowbandBW5[0][0], &prbsToNarrowbandBW10[0][0], &prbsToNarrowbandBW15[0][0], &prbsToNarrowbandBW20[0][0]};
+
+	uint32_t (*value)[6] = (uint32_t(*)[6])arr[dci_bandwitdh];
+	value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_FirstPRBoutput]] = outputParameters[dci60a_FirstPRBoutput];
+	value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_LastPRBoutput]] = outputParameters[dci60a_LastPRBoutput];
 }

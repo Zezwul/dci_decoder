@@ -50,9 +50,35 @@ int main(const int argc, const char* argv[])
 	}
 	case dci60a:
 	{
-		uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
-				TPC, CSIR, SRSR, PDCCH };
+		uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { FORMAT_FLAG, NARROWBAND_INDEX, DCI60A_RIV_LEN,
+				MCS60A, PUSCH, HARQ, NDI, RV, TPC, CSIR, SRSR, PDCCH };
 		const uint32_t dci60a_shiftOrigin = 31;
+
+		uint32_t* readValueDCI;
+		readValueDCI = dci_readValueFromDCI(inputArguments, dci60a_offsetArray, DCI60A_NUMBER_PARAM, dci60a_shiftOrigin);
+		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci60a_maxAmountOfArgumentsOutput);
+		dci_rivDecode(dci_Result, 6, readValueDCI[dci60a_rivLength],
+				&outputArray[dci60a_FirstPRBoutput], &outputArray[dci60a_LastPRBoutput]);
+		printf("F: %d, L: %d", outputArray[dci60a_FirstPRBoutput, outputArray[dci60a_LastPRBoutput]]);
+		dci60a_prbsNumberDecoder(dci_bandwidthPRB, readValueDCI, outputArray);
+		dci60a_OutputParameters outputElement = dci60a_MCSoutput;
+		dci60a_InputParameters inputElement = dci60a_MCS;
+
+		for ( ; outputElement < dci60a_maxAmountOfArgumentsOutput;
+				outputElement++, inputElement++)
+		{
+			outputArray[outputElement] = readValueDCI[inputElement];
+		}
+
+		for (dci60a_OutputParameters i = dci60a_FirstPRBoutput;
+				i < dci60a_maxAmountOfArgumentsOutput; ++i)
+		{
+			fprintf(stdout, "%u ", outputArray[i]);
+		}
+		fprintf(stdout, "\n");
+
+		free(readValueDCI);
+		free(outputArray);
 
 		break;
 	}
