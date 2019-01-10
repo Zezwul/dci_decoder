@@ -25,6 +25,9 @@ int main(const int argc, const char* argv[])
 
 		uint32_t* readValueFromDci0 = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
 				DCI0_NUMBER_PARAM, dci0_shiftOrigin);
+
+		dci0_CorrectnessParameters(readValueFromDci0, dci_bandwidthPRB);
+
 		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci0_maxAmountOfArgumentsOutput);
 		dci_rivDecode(dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
 				&outputArray[dci0_firstPRBOutput], &outputArray[dci0_lastPRBOutput]);
