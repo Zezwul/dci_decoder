@@ -26,10 +26,10 @@ int main(const int argc, const char* argv[])
 		uint32_t* readValueFromDci0 = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
 				DCI0_NUMBER_PARAM, dci0_shiftOrigin);
 
-		dci0_CorrectnessParameters(readValueFromDci0, dci_bandwidthPRB);
+		dci0_CorrectnessParameters(readValueFromDci0);
 
 		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci0_maxAmountOfArgumentsOutput);
-		dci_rivDecode(dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
+		dci_rivDecode(dci_Result, dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
 				&outputArray[dci0_firstPRBOutput], &outputArray[dci0_lastPRBOutput]);
 		dci0_printResultsAndFreeArrays(readValueFromDci0, outputArray);
 		break;
@@ -50,9 +50,18 @@ int main(const int argc, const char* argv[])
 	}
 	case dci60a:
 	{
-		uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { RIV_LEN, MCS60A, PUSCH, HARQ, NDI, RV,
-				TPC, CSIR, SRSR, PDCCH };
+		uint32_t dci60a_offsetArray[DCI60A_NUMBER_PARAM] = { FORMAT_FLAG, NARROWBAND_INDEX, DCI60A_RIV_LEN,
+				MCS60A, PUSCH, HARQ, NDI, RV, TPC, CSIR, SRSR, PDCCH };
 		const uint32_t dci60a_shiftOrigin = 31;
+
+		uint32_t* readValueDCI;
+		readValueDCI = dci_readValueFromDCI(inputArguments, dci60a_offsetArray, DCI60A_NUMBER_PARAM, dci60a_shiftOrigin);
+		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci60a_maxAmountOfArgumentsOutput);
+		dci_rivDecode(dci_Result, 6, readValueDCI[dci60a_rivLength],
+				&outputArray[dci60a_FirstPRBoutput], &outputArray[dci60a_LastPRBoutput]);
+		dci60a_prbsNumberDecoder(dci_bandwidth, readValueDCI, outputArray);
+		dci60_printResultsAndFreeArrays(readValueDCI, outputArray);
+
 		break;
 	}
 	default:

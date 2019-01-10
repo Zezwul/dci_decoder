@@ -162,7 +162,7 @@ Test(RivTest, dci_rivPositiveValues)
 			for (uint32_t endIdx = startIdx; endIdx < bandwidthPRB[bwIndex]; endIdx++)
 			{
 				uint32_t rivValue = resourceAllocationRIV(bandwidthPRB[bwIndex], startIdx, endIdx);
-				dci_rivDecode ( bandwidthPRB[bwIndex], rivValue, &outFirstPRB, &outLastPRB);
+				dci_rivDecode ( 0, bandwidthPRB[bwIndex], rivValue, &outFirstPRB, &outLastPRB);
 				cr_expect_eq(outFirstPRB, startIdx,"Error");
 				cr_expect_eq(outLastPRB, endIdx,"Error");
 			}

@@ -26,10 +26,14 @@
 #define DCI1_NUMBER_PARAM 7
 
 /* dci60a Length of parameters */
+#define DCI60A_RIV_LEN 5
+#define NARROWBAND_INDEX 4
 #define MCS60A 4
 #define PUSCH 2
 #define PDCCH 2
-#define DCI60A_NUMBER_PARAM 10
+#define DCI60A_NUMBER_PARAM 12
+#define NUMBER_OF_ALLOCATED_RBS 6
+#define MAX_NUMBER_OF_AVAIBLE_FIRST_PRBS 16
 
 typedef enum dci0_OutputParameters
 {
@@ -72,6 +76,7 @@ typedef enum dci1_OutputParameters
 
 typedef enum dci60a_InputParameters
 {
+	dci60a_formtFlag,
 	dci60a_narrowbandIndex,
 	dci60a_rivLength,
 	dci60a_MCS,
@@ -122,10 +127,10 @@ typedef enum dciType
 } dciType;
 
 uint32_t dci0_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
-void dci0_CorrectnessParameters(uint32_t* dciParam, const uint32_t dci0_bandwidthPRB);
+void dci0_CorrectnessParameters(uint32_t* dciParam);
 void dci1_CorrectnessParameters(uint32_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
-void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
+void dci60a_CorrectnessParameters(uint32_t* dciParam);
 
 /* > Function: dci1_printResults
 **********************************************************************************************************
@@ -201,6 +206,7 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
 **********************************************************************************************************
  * @brief   Based on the given riv, decodes the values of the first and last PRBs.
  *
+ * @param[in]   dciType:                  type of dci - used to distinguish the algorithm decoding the riv
  * @param[in]   bandwidthPRB:             the number of allocated PRB depending on the bandwidth specified by the user
  * @param[in]   riv:                      resource indicator value depending on the first and last PRB
  * @param[out]   outFirstPRB:              pointer return first PRB calculated from riv
@@ -208,10 +214,12 @@ uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin);
  *
 **********************************************************************************************************/
 
-uint16_t dci_rivDecode(uint32_t bandwidthPRB, uint32_t riv,
-        uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
+uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
+		uint32_t* restrict outFirstPRB, uint32_t* restrict outLastPRB);
 
 void dci_print(char* output);
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray);
+void dci60a_prbsNumberDecoder(bandwidth_t dci_bandwitdh, const uint32_t *readFromDci, uint32_t *outputParameters);
+void dci60_printResultsAndFreeArrays(uint32_t* readValueFromDci60a, uint32_t* outputArray);
 
 #endif /*DCI_COMMON_H_*/
