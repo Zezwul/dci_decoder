@@ -10,6 +10,7 @@ runDCI0: build
 runDCI1: build
 	echo "7ffffffffe" | ./decoder.out dci1 20
 runDCI60: build
+	echo "02f92490" | ./decoder.out dci60a 20
 	
 clean:
 	rm -f *.out *o dci test.out

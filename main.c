@@ -26,10 +26,10 @@ int main(const int argc, const char* argv[])
 		uint32_t* readValueFromDci0 = dci_readValueFromDCI(inputArguments, dci0_offsetArray,
 				DCI0_NUMBER_PARAM, dci0_shiftOrigin);
 
-		dci0_CorrectnessParameters(readValueFromDci0, dci_bandwidthPRB);
+		dci0_CorrectnessParameters(readValueFromDci0);
 
 		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci0_maxAmountOfArgumentsOutput);
-		dci_rivDecode(dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
+		dci_rivDecode(dci_Result, dci_bandwidthPRB, readValueFromDci0[dci0_rivOutput],
 				&outputArray[dci0_firstPRBOutput], &outputArray[dci0_lastPRBOutput]);
 		dci0_printResultsAndFreeArrays(readValueFromDci0, outputArray);
 		break;
@@ -59,26 +59,8 @@ int main(const int argc, const char* argv[])
 		uint32_t* outputArray = malloc(sizeof(uint32_t) * dci60a_maxAmountOfArgumentsOutput);
 		dci_rivDecode(dci_Result, 6, readValueDCI[dci60a_rivLength],
 				&outputArray[dci60a_FirstPRBoutput], &outputArray[dci60a_LastPRBoutput]);
-		printf("F: %d, L: %d", outputArray[dci60a_FirstPRBoutput, outputArray[dci60a_LastPRBoutput]]);
-		dci60a_prbsNumberDecoder(dci_bandwidthPRB, readValueDCI, outputArray);
-		dci60a_OutputParameters outputElement = dci60a_MCSoutput;
-		dci60a_InputParameters inputElement = dci60a_MCS;
-
-		for ( ; outputElement < dci60a_maxAmountOfArgumentsOutput;
-				outputElement++, inputElement++)
-		{
-			outputArray[outputElement] = readValueDCI[inputElement];
-		}
-
-		for (dci60a_OutputParameters i = dci60a_FirstPRBoutput;
-				i < dci60a_maxAmountOfArgumentsOutput; ++i)
-		{
-			fprintf(stdout, "%u ", outputArray[i]);
-		}
-		fprintf(stdout, "\n");
-
-		free(readValueDCI);
-		free(outputArray);
+		dci60a_prbsNumberDecoder(dci_bandwidth, readValueDCI, outputArray);
+		dci60_printResultsAndFreeArrays(readValueDCI, outputArray);
 
 		break;
 	}

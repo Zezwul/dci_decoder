@@ -127,10 +127,10 @@ typedef enum dciType
 } dciType;
 
 uint32_t dci0_lengthOfRIVviaBandwidth(bandwidth_t bandwidth);
-void dci0_CorrectnessParameters(uint32_t* dciParam, const uint32_t dci0_bandwidthPRB);
+void dci0_CorrectnessParameters(uint32_t* dciParam);
 void dci1_CorrectnessParameters(uint32_t* dciParam);
 uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth);
-void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB);
+void dci60a_CorrectnessParameters(uint32_t* dciParam);
 
 /* > Function: dci1_printResults
 **********************************************************************************************************
@@ -219,5 +219,7 @@ uint16_t dci_rivDecode(dciType dciType, uint32_t bandwidthPRB, uint32_t riv,
 
 void dci_print(char* output);
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray);
+void dci60a_prbsNumberDecoder(bandwidth_t dci_bandwitdh, const uint32_t *readFromDci, uint32_t *outputParameters);
+void dci60_printResultsAndFreeArrays(uint32_t* readValueFromDci60a, uint32_t* outputArray);
 
 #endif /*DCI_COMMON_H_*/

@@ -37,8 +37,6 @@ const char* const dciStrArguments[] = {"dci0", "dci1","dci60a"};
 
 uint32_t dciBandwidth[AMOUNT_OF_BANDWIDTHS] = {1, 3, 5, 10, 15, 20};
 
-static const uint32_t dciBandwidthToPrb[AMOUNT_OF_BANDWIDTHS] = {6, 15, 25, 50, 75, 100};
-
 uint32_t dci1_calculateShiftOrigin(uint32_t* shiftArray)
 {
     uint32_t numberOfSignificantBits = 0;
@@ -80,6 +78,29 @@ void dci0_printResultsAndFreeArrays(uint32_t* readValueFromDci0, uint32_t* outpu
     FREE(outputArray);
 }
 
+void dci60_printResultsAndFreeArrays(uint32_t* readValueFromDci60a, uint32_t* outputArray)
+{
+    dci60a_OutputParameters outputElementIndex = dci60a_MCSoutput;
+    dci60a_InputParameters inputElementIndex = dci60a_MCS;
+
+    for ( ; outputElementIndex < dci60a_maxAmountOfArgumentsOutput;
+            outputElementIndex++, inputElementIndex++)
+    {
+        outputArray[outputElementIndex] = readValueFromDci60a[inputElementIndex];
+    }
+
+    for (dci60a_OutputParameters i = dci60a_FirstPRBoutput;
+            i < dci60a_maxAmountOfArgumentsOutput; ++i)
+    {
+        fprintf(stdout, "%u ", outputArray[i]);
+    }
+
+    fprintf(stdout, "\n");
+
+    FREE(readValueFromDci60a);
+    FREE(outputArray);
+}
+
 void dci1_printResults(uint32_t* readValueFromDci1, uint32_t* outputRBGIndex)
 {
 	for (dci1_OutputParameters i = dci1_bitmapValue; i < dci1_maxAmountOfArgumentsValue; i++)
@@ -105,7 +126,7 @@ uint32_t dci0_lengthOfRIVviaBandwidth(uint32_t bandwidth)
 	return possibleLengthBitsOfRIV[bandwidth];
 }
 
-uint32_t dcli1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
+uint32_t dci1_lengthOfBitmapViaBandwidth(bandwidth_t bandwidth)
 {
 	uint32_t possibleLengthBitsRBG[AMOUNT_OF_BANDWIDTHS] = {6, 8, 13, 17, 19 ,25};
 	return possibleLengthBitsRBG[bandwidth];
@@ -145,7 +166,7 @@ bandwidth_t dci_defineDci(const int argc, const char* const argv[], dciType* res
 
 uint32_t dci_readStdin(uint64_t *dci_readArgumentsStdin)
 {
-	return (uint32_t)scanf("%"SCNu64, dci_readArgumentsStdin);
+	return (uint32_t)scanf("%"PRIx64, dci_readArgumentsStdin);
 }
 
 void dci_print(char* output)
@@ -174,7 +195,7 @@ uint32_t* dci_readValueFromDCI(uint64_t dci, uint32_t* bitLenghtOfDciParameter,
 	return outputArray;
 }
 
-void dci0_CorrectnessParameters(uint32_t* dciParam, const uint32_t dci0_bandwidthPRB)
+void dci0_CorrectnessParameters(uint32_t* dciParam)
 {
 	uint32_t errorCounter = 0;
 
@@ -260,61 +281,61 @@ void dci1_CorrectnessParameters(uint32_t* dciParam)
 	}
 }
 
-void dci60a_CorrectnessParameters(uint8_t* dciParam, const uint8_t dci60a_bandwidthPRB)
+void dci60a_CorrectnessParameters(uint32_t* dciParam)
 {
 	uint32_t errorCounter = 0;
 
-	if (dciParam[dci60a_MCSoutput] > MAX_MCS)
+	if (dciParam[dci60a_MCS] > MAX_MCS)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_MCS_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_PUSCHoutput] > MAX_PUSCH)
+	if (dciParam[dci60a_PUSCH] > MAX_PUSCH)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_PUSCH_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_HARQoutput] > MAX_HARQ)
+	if (dciParam[dci60a_HARQ] > MAX_HARQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_HARQ_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_NDIoutput] > MAX_NDI)
+	if (dciParam[dci60a_NDI] > MAX_NDI)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_NDI_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_RVoutput] > MAX_RV)
+	if (dciParam[dci60a_RV] > MAX_RV)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_RV_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_TPCoutput] > MAX_TPC)
+	if (dciParam[dci60a_TPC] > MAX_TPC)
 	{
 
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_TPC_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_CSIreqOutput] > MAX_CSI_REQ)
+	if (dciParam[dci60a_CSIreq] > MAX_CSI_REQ)
 	{
 
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_CSIreq_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_SRSreqOutput] > MAX_SRS_REQ)
+	if (dciParam[dci60a_SRSreq] > MAX_SRS_REQ)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_SRSreq_parametr\n");
 		errorCounter++;
 	}
 
-	if (dciParam[dci60a_PDCCHOutput] > MAX_PDCCH)
+	if (dciParam[dci60a_PDCCH] > MAX_PDCCH)
 	{
 		DEBUG_PRINT("ERR_OCC_Inncorrect_value of_PDCCH_parametr\n");
 		errorCounter++;
@@ -424,6 +445,6 @@ void dci60a_prbsNumberDecoder(bandwidth_t dci_bandwitdh, const uint32_t *readFro
 	const uint32_t *arr[] = {&prbsToNarrowbandBW1[0][0], &prbsToNarrowbandBW3[0][0], &prbsToNarrowbandBW5[0][0], &prbsToNarrowbandBW10[0][0], &prbsToNarrowbandBW15[0][0], &prbsToNarrowbandBW20[0][0]};
 
 	uint32_t (*value)[6] = (uint32_t(*)[6])arr[dci_bandwitdh];
-	value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_FirstPRBoutput]] = outputParameters[dci60a_FirstPRBoutput];
-	value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_LastPRBoutput]] = outputParameters[dci60a_LastPRBoutput];
+	outputParameters[dci60a_FirstPRBoutput] = value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_FirstPRBoutput]];
+	outputParameters[dci60a_LastPRBoutput] = value[readFromDci[dci60a_narrowbandIndex]][outputParameters[dci60a_LastPRBoutput]];
 }
